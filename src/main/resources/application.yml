@@ -1,0 +1,15 @@
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://hooking-db.cyweishgrf3r.ap-northeast-2.rds.amazonaws.com:3306/docker?serverTimezone=Asia/Seoul
+#    username: root
+#    password: yexxi035403
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      generate-ddl: true
+#      format_sql: true
+#      use_sql_comments: true
+#  profiles:
+#    include: database
