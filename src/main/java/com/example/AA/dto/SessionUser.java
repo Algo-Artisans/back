@@ -1,17 +1,19 @@
 package com.example.AA.dto;
 
-import com.example.AA.domain.User;
+import com.example.AA.entity.User;
+
 import lombok.Getter;
 
 import java.io.Serializable;
 
+// 카카오 로그인 확인용 session
 @Getter
 public class SessionUser implements Serializable {
-    private String name;
-    private String picture;
+    private String nickname;
+    private String image;
 
     public SessionUser(User user) {
-        this.name = user.getName();
-        this.picture = user.getPicture();
+        this.nickname = user.getNickname();
+        this.image = user.getImage();
     }
 }

@@ -1,4 +1,4 @@
-package com.example.AA.domain;
+package com.example.AA.entity;
 
 public class BaseTimeEntity {
 }

@@ -7,6 +7,11 @@
         {{picture}}
         <br> <a href="/logout" role="button">Logout</a>
     </p>
+    <p>
+        <!-- 권한 선택 버튼 -->
+        <button onclick="selectRole('GUEST')">Select Guest Role</button>
+        <button onclick="selectRole('DESIGNER')">Select Designer Role</button>
+    </p>
     {{/nickname}}
     {{^nickname}}
     <!-- 로그인 전 -->
@@ -15,3 +20,26 @@
     {{/nickname}}
 </div>
 <br>
+
+<script>
+   function selectRole(role) {
+           // 사용자의 권한을 선택하고 서버로 업데이트
+           const token = 'accessToken';
+           fetch('/select-role?role=' + role, {
+               method: 'POST',
+               headers: {
+                   'Authorization': token,
+                   'Content-Type': 'application/json'
+               }
+           })
+           .then(response => response.json())
+           .then(data => {
+               if (data.success) {
+                   // 선택이 성공하면 새로고침
+                   location.reload();
+               } else {
+                   alert('Failed to select role. Please try again.');
+               }
+           });
+       }
+</script>
