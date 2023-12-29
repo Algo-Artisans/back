@@ -1,4 +1,4 @@
-package com.example.AA.domain;
+package com.example.AA.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Role {
 
-    GUSET("ROLE_GUEST", "손님"),
+    GUEST("ROLE_GUEST", "손님"),
     USER("ROLE_DESIGNER", "디자이너");
 
     private final String key;

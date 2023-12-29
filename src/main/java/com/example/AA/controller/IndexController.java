@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpSession;
 
+
+// 카카오 로그인 확인용 controller
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -20,8 +22,8 @@ public class IndexController {
     public String index(Model model) {
         SessionUser user = (SessionUser) httpSession.getAttribute("user");
         if(user != null){
-            model.addAttribute("nickname", user.getName());
-            model.addAttribute("picture", user.getPicture());
+            model.addAttribute("nickname", user.getNickname());
+            model.addAttribute("picture", user.getImage());
         }
         return "index";
     }
