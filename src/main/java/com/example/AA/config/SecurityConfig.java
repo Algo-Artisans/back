@@ -15,7 +15,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 
 @RequiredArgsConstructor
@@ -37,24 +42,24 @@ public class SecurityConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000/","http://localhost:3001/"));
-//        configuration.addAllowedHeader("*");
-//        configuration.addExposedHeader("Set-Cookie");
-//        configuration.addAllowedMethod("*");
-//        configuration.setAllowCredentials(true);
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000/","http://localhost:3001/"));
+        configuration.addAllowedHeader("*");
+        configuration.addExposedHeader("Set-Cookie");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                //.cors().configurationSource(corsConfigurationSource())
-                //.and()
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -67,7 +72,10 @@ public class SecurityConfig {
                 .antMatchers(
                         /* swagger v3 */
                         "/v3/api-docs/**",
-                        "/swagger-ui/**","/", "/css/**", "/images/**", //resource/static을 기본경로로 자원에 url로 접근할 수 있다.
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/webjars/**",
+                        "/swagger-resources/**","/", "/css/**", "/images/**", //resource/static을 기본경로로 자원에 url로 접근할 수 있다.
                         "/js/**", "/h2/**", "/select-role"
                 ).permitAll()
                 .antMatchers("/api/v1/**").hasRole(Role.
