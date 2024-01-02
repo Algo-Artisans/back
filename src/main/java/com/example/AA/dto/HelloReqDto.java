@@ -1,20 +1,19 @@
-package com.example.docker.dto;
+package com.example.AA.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Getter
-@NoArgsConstructor
 @Setter
+@NoArgsConstructor
 @Data
-public class HelloResDto {
+public class HelloReqDto {
 
     private Long helloId;
     private String text;
 
+
     @Builder
-    public HelloResDto(Long helloId, String text) {
+    public HelloReqDto(Long helloId,String text) {
         this.helloId= helloId;
         this.text = text;
 

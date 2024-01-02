@@ -1,10 +1,9 @@
-package com.example.docker.entity;
+package com.example.AA.entity;
 
 import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter

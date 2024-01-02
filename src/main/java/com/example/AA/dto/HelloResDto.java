@@ -1,21 +1,18 @@
-package com.example.docker.dto;
-
-import com.example.docker.entity.Hello;
+package com.example.AA.dto;
 
 import lombok.*;
 
 @Getter
-@Setter
 @NoArgsConstructor
+@Setter
 @Data
-public class HelloReqDto {
+public class HelloResDto {
 
     private Long helloId;
     private String text;
 
-
     @Builder
-    public HelloReqDto(Long helloId,String text) {
+    public HelloResDto(Long helloId, String text) {
         this.helloId= helloId;
         this.text = text;
 
