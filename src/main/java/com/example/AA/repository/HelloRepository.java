@@ -1,6 +1,6 @@
-package com.example.docker.repository;
+package com.example.AA.repository;
 
-import com.example.docker.entity.Hello;
+import com.example.AA.entity.Hello;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

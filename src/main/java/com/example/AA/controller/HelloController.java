@@ -1,11 +1,10 @@
-package com.example.docker.controller;
+package com.example.AA.controller;
 
-import com.example.docker.dto.HelloReqDto;
-import com.example.docker.dto.HelloResDto;
-import com.example.docker.entity.Hello;
-import com.example.docker.repository.HelloRepository;
+import com.example.AA.dto.HelloReqDto;
+import com.example.AA.dto.HelloResDto;
+import com.example.AA.entity.Hello;
+import com.example.AA.repository.HelloRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
