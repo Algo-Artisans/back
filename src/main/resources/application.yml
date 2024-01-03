@@ -51,3 +51,7 @@ springdoc:
   default-produces-media-type: application/json
   swagger-ui:
     path: /swagger-ui.html
+
+logging:
+  level:
+    root: DEBUG
