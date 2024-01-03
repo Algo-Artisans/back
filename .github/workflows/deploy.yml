@@ -9,7 +9,7 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "deploy" ]
+    branches: [ "develop" ]
 
 permissions:
   contents: read
@@ -88,5 +88,3 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_REPO }}/docker-nginx
             docker-compose up -d
             docker image prune -f
-
-##
