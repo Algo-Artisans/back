@@ -24,7 +24,7 @@
 <script>
    function selectRole(role) {
            // 사용자의 권한을 선택하고 서버로 업데이트
-           const token = '';
+           const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzMjQwNzcyOTU1Iiwicm9sZXMiOiJERVNJR05FUiIsImlhdCI6MTcwNDI5NTkzMCwiZXhwIjoxNzA0MzAzMTMwfQ.P7kOgVX-YoUpFFLeIsk_uxtmqzgScpb4OlmNW03sqDc';
            fetch('/select-role?role=' + role, {
                method: 'POST',
                headers: {
