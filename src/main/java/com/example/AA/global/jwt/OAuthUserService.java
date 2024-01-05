@@ -1,5 +1,8 @@
 package com.example.AA.global.jwt;
 
+import com.example.AA.dto.FaceShapeReqDto;
+import com.example.AA.dto.OAuthUserResDto;
+import com.example.AA.entity.FaceShape;
 import com.example.AA.entity.Role;
 import com.example.AA.entity.User;
 import com.example.AA.dto.OAuthAttributesResDto;
@@ -16,12 +19,14 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -55,11 +60,6 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
                 attributes.getAttributes(),
                 "id"
         );
-
-//        return new DefaultOAuth2User(
-//            Collections.singleton(new SimpleGrantedAuthority(user.getRoles())),
-//            attributes.getAttributes(),"id");
-
     }
 
     public void selectRole(HttpServletRequest httpRequest, String role) {
@@ -95,6 +95,38 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
             log.info("user isn't");
             User newUser = userRepository.save(attributes.toEntity());
             return newUser;
+        }
+    }
+
+
+    public OAuthUserResDto getUser(HttpServletRequest httpRequest) {
+        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+        return user != null ? OAuthUserResDto.builder().user(user).build() : null;
+    }
+
+    public void updateFaceShape(HttpServletRequest httpRequest, FaceShapeReqDto faceShapeReqDto) {
+        try {
+            // FaceShape 열거형에 대응되는 값을 찾아 업데이트
+            for (FaceShape value : FaceShape.values()) {
+                if (value.getValue().equalsIgnoreCase(faceShapeReqDto.getFaceShapeBest())) {
+                    User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+                    user.updateFaceShapeBest(value);
+                    userRepository.save(user);
+                    return;  // 업데이트 후 종료
+                }
+            }
+            for (FaceShape value : FaceShape.values()) {
+                if (value.getValue().equalsIgnoreCase(faceShapeReqDto.getFaceShapeWorst())) {
+                    User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+                    user.updateFaceShapeWorst(value);
+                    userRepository.save(user);
+                    return;  // 업데이트 후 종료
+                }
+            }
+            // FaceShape에 대응되는 값이 없으면 IllegalArgumentException 발생
+            throw new IllegalArgumentException("유효하지 않은 얼굴형 값입니다.");
+        } catch (Exception e) {
+            throw new RuntimeException("얼굴형 처리 중 에러가 발생했습니다.");
         }
     }
 }
