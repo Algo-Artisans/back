@@ -22,6 +22,7 @@ public class User{
     private Long userId;
 
     @Column(name="kakao_id")
+    @NotNull
     private Long kakaoId;
 
     @Column
@@ -31,6 +32,13 @@ public class User{
     @Column
     private String image;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "face_shape_best")
+    private FaceShape faceShapeBest;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "face_shape_worst")
+    private FaceShape faceShapeWorst;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
@@ -45,12 +53,11 @@ public class User{
         this.kakaoId = kakaoId;
         this.nickname = nickname;
         this.image = image;
+        this.faceShapeBest = null;
+        this.faceShapeWorst = null;
         this.deleteFlag = false;
     }
 
-    public void setRole(String role) {
-        this.role = Role.valueOf(role);
-    }
 
     public void updateProfile(String nickname) {
         this.nickname = nickname;
@@ -60,6 +67,17 @@ public class User{
         this.image = fileurl;
     }
 
+    public void updateFaceShapeBest(FaceShape faceShapeBest) {
+        this.faceShapeBest = faceShapeBest;
+    }
+
+    public void updateFaceShapeWorst(FaceShape faceShapeWorst) {
+        this.faceShapeWorst = faceShapeWorst;
+    }
+
+    public void setRole(String role) {
+        this.role = Role.valueOf(role);
+    }
 
     public void updateDeleteFlag() {
         this.deleteFlag = true;
