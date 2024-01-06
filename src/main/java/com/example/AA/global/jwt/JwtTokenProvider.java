@@ -75,10 +75,10 @@ public class JwtTokenProvider {
     public Authentication validateToken(HttpServletRequest request, String token) {
         String exception = "exception";
         try {
-            String expiredAT = redisService.getValues(blackListATPrefix + token);
-            if (expiredAT != null) {
-                throw new ExpiredJwtException(null, null, null);
-            }
+//            String expiredAT = redisService.getValues(blackListATPrefix + token);
+//            if (expiredAT != null) {
+//                throw new ExpiredJwtException(null, null, null);
+//            }
             Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
             return getAuthentication(token);
         } catch (MalformedJwtException | SignatureException | UnsupportedJwtException e) {
