@@ -76,7 +76,7 @@ public class SecurityConfig {
                         "/swagger-ui.html",
                         "/webjars/**",
                         "/swagger-resources/**","/", "/css/**", "/images/**", //resource/static을 기본경로로 자원에 url로 접근할 수 있다.
-                        "/js/**", "/h2/**", "/select-role", "/receiveImage", "/hello","/information", "/face-shape"
+                        "/js/**", "/h2/**", "/select-role", "/receiveImage", "/hello","/information", "/face-shape", "/upload"
                 ).permitAll()
                 .antMatchers("/api/v1/**").hasRole(Role.
                         USER.name())
