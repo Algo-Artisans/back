@@ -12,11 +12,17 @@ public class PortfolioReqDto {
     private String introduction;
     private int likesCount;
     private String profileURL;
+    private String imageUrl1;
+    private String imageUrl2;
+    private String imageUrl3;
+    private String imageUrl4;
 
 
     @Builder
     public PortfolioReqDto(String gender, String phoneNumber, String workplace,
-                           String snsAddress, String introduction, int likesCount, String profileURL) {
+                           String snsAddress, String introduction, int likesCount, String profileURL,
+                           String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4) {
+
             this.gender = gender;
             this.phoneNumber = phoneNumber;
             this.workplace = workplace;
@@ -24,6 +30,10 @@ public class PortfolioReqDto {
             this.introduction = introduction;
             this.likesCount = likesCount;
             this.profileURL = profileURL;
+            this.imageUrl1 = imageUrl1;
+            this.imageUrl2 = imageUrl2;
+            this.imageUrl3 = imageUrl3;
+            this.imageUrl4 = imageUrl4;
         }
 
 }
