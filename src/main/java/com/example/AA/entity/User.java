@@ -5,11 +5,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
 
 import javax.persistence.*;
 
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @Getter
 @Where(clause = "delete_flag=0")
@@ -77,6 +79,10 @@ public class User{
 
     public void setRole(String role) {
         this.role = Role.valueOf(role);
+    }
+
+    public boolean isDesigner() {
+        return this.getRole() == Role.DESIGNER;
     }
 
     public void updateDeleteFlag() {

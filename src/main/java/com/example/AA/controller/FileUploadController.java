@@ -25,7 +25,8 @@ public class FileUploadController {
 	private String bucket;
 
 	@PostMapping("/upload")
-	public ResponseEntity<String> uploadFile(HttpServletRequest httpRequest, @RequestParam("file") MultipartFile file) {
+	public ResponseEntity<String> uploadFile(HttpServletRequest httpRequest,
+											 @RequestParam("file") MultipartFile file) {
 		try {
 			String fileName = file.getOriginalFilename();
 
