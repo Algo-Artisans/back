@@ -1,7 +1,7 @@
 package com.example.AA.entity;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+        import lombok.Getter;
+        import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor

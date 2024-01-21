@@ -1,11 +1,9 @@
 package com.example.AA.controller;
 
 
-import com.example.AA.dto.FaceShapeReqDto;
-import com.example.AA.dto.FaceShapeResDto;
-import com.example.AA.dto.HelloResDto;
-import com.example.AA.dto.OAuthUserResDto;
+import com.example.AA.dto.*;
 import com.example.AA.entity.FaceShape;
+import com.example.AA.entity.Portfolio;
 import com.example.AA.entity.User;
 import com.example.AA.global.jwt.OAuthUserService;
 import com.example.AA.repository.UserRepository;
@@ -30,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("/face-shape")
-    public FaceShapeResDto receiveFaceShape(HttpServletRequest httpRequest, @RequestBody FaceShapeReqDto faceShapeReqDto) {
+    public FaceShapeResDto updateFaceShape(HttpServletRequest httpRequest, @RequestBody FaceShapeReqDto faceShapeReqDto) {
         oAuthUserService.updateFaceShape(httpRequest,faceShapeReqDto);
         return new FaceShapeResDto(faceShapeReqDto.getFaceShapeBest(), faceShapeReqDto.getFaceShapeWorst());
     }
