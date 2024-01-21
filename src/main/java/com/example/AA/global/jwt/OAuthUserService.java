@@ -1,12 +1,10 @@
 package com.example.AA.global.jwt;
 
 import com.example.AA.dto.*;
-import com.example.AA.entity.FaceShape;
-import com.example.AA.entity.Portfolio;
-import com.example.AA.entity.Role;
-import com.example.AA.entity.User;
+import com.example.AA.entity.*;
 import com.example.AA.repository.PortfolioRepository;
 import com.example.AA.repository.UserRepository;
+import com.example.AA.repository.WorkImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,6 +32,7 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
     private final HttpSession httpSession;
     private final JwtTokenProvider jwtTokenProvider;
     private final PortfolioRepository portfolioRepository;
+    private final WorkImageRepository workImageRepository;
 
     //회원가입 처리
     @Override
@@ -146,16 +145,29 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
                     .profileURL(portfolioReqDto.getProfileURL())
                     .build();
 
+            WorkImage workImage = WorkImage.builder()
+                    .portfolio(portfolio)
+                    .imageUrl1(portfolioReqDto.getImageUrl1())
+                    .imageUrl2(portfolioReqDto.getImageUrl2())
+                    .imageUrl3(portfolioReqDto.getImageUrl3())
+                    .imageUrl4(portfolioReqDto.getImageUrl4())
+                    .build();
+
             // 포트폴리오 저장
             portfolioRepository.save(portfolio);
+            workImageRepository.save(workImage);
 
             // 저장된 포트폴리오 정보를 조회하여 PortfolioResDto 객체 생성
             Portfolio savedPortfolio = portfolioRepository.findPortfolioByUser(user)
                     .orElseThrow(() -> new RuntimeException("포트폴리오를 찾을 수 없습니다."));
 
+            WorkImage savedWorkImage = workImageRepository.findWorkImageByPortfolio(portfolio)
+                    .orElseThrow(() -> new RuntimeException("작업물을 찾을 수 없습니다."));
+
             return PortfolioResDto.builder()
                     .user(user)
                     .portfolio(savedPortfolio)
+                    .workImage(savedWorkImage)
                     .build();
         } else {
             throw new RuntimeException("디자이너가 아닌 사용자는 포트폴리오를 생성할 수 없습니다.");
