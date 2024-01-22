@@ -1,11 +1,13 @@
 package com.example.AA.dto;
 
-import com.example.AA.entity.FaceShape;
+import com.example.AA.entity.HairStyle;
 import com.example.AA.entity.Portfolio;
 import com.example.AA.entity.User;
 import com.example.AA.entity.WorkImage;
 import lombok.Builder;
 import lombok.Getter;
+
+
 
 @Getter
 public class PortfolioResDto {
@@ -21,10 +23,14 @@ public class PortfolioResDto {
     private String imageUrl2;
     private String imageUrl3;
     private String imageUrl4;
+    private String hairStyle1;
+    private String hairStyle2;
+    private String hairStyle3;
 
     // DesignerDTO를 Designer 엔티티로 변환하는 메서드
     @Builder
-    public PortfolioResDto(User user, Portfolio portfolio, WorkImage workImage) {
+    public PortfolioResDto(User user, Portfolio portfolio, WorkImage workImage,
+                           HairStyle hairStyle1, HairStyle hairStyle2, HairStyle hairStyle3) {
         this.user = user;
         this.gender = portfolio.getGender();
         this.phoneNumber = portfolio.getPhoneNumber();
@@ -37,6 +43,10 @@ public class PortfolioResDto {
         this.imageUrl2 = workImage.getImageUrl2();
         this.imageUrl3 = workImage.getImageUrl3();
         this.imageUrl4 = workImage.getImageUrl4();
+        this.hairStyle1 = String.valueOf(hairStyle1.getHairName());
+        this.hairStyle2 = String.valueOf(hairStyle2.getHairName());
+        this.hairStyle3 = String.valueOf(hairStyle3.getHairName());
+
     }
 
 }

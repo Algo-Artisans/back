@@ -1,4 +1,4 @@
-package com.example.AA.entity;
+package com.example.AA.entity.enumtype;
 
         import lombok.Getter;
         import lombok.RequiredArgsConstructor;
