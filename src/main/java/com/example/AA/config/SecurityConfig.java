@@ -1,7 +1,7 @@
 package com.example.AA.config;
 
 
-import com.example.AA.entity.Role;
+import com.example.AA.entity.enumtype.Role;
 import com.example.AA.global.jwt.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,17 +1,17 @@
 package com.example.AA.entity;
 
+import com.example.AA.entity.enumtype.FaceShape;
+import com.example.AA.entity.enumtype.Role;
 import com.sun.istack.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
 
 import javax.persistence.*;
 
-@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 @Getter
 @Where(clause = "delete_flag=0")
