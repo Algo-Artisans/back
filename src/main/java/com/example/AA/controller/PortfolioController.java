@@ -68,6 +68,7 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioService.createAdvertisement(httpRequest, advertisementReqDto));
     }
 
+    // 내 광고 삭제
     @DeleteMapping("/myAdvertisement")
     public ResponseEntity<?> postAdvertisement(HttpServletRequest httpRequest) {
         return ResponseEntity.ok(portfolioService.deleteAdvertisement(httpRequest));
