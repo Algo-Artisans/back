@@ -177,9 +177,7 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
 
 
             // 저장된 포트폴리오 정보를 조회하여 PortfolioResDto 객체 생성
-            Portfolio savedPortfolio = portfolioRepository.findPortfolioByUser(user)
-                    .orElseThrow(() -> new RuntimeException("포트폴리오를 찾을 수 없습니다."));
-
+            Portfolio savedPortfolio = portfolioRepository.findPortfolioByUser(user);
             WorkImage savedWorkImage = workImageRepository.findWorkImageByPortfolio(portfolio)
                     .orElseThrow(() -> new RuntimeException("작업물을 찾을 수 없습니다."));
 

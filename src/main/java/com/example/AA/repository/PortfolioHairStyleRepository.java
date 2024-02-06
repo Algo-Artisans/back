@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface PortfolioHairStyleRepository extends JpaRepository<PortfolioHairStyle, Long> {
     List<PortfolioHairStyle> findPortfolioHairStyleByPortfolio(Portfolio portfolio);
 
+    List<PortfolioHairStyle> findPortfolioHairStyleByHairStyle_HairNameContaining(String s);
 }
