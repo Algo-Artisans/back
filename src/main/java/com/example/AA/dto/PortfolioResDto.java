@@ -12,6 +12,7 @@ import lombok.Getter;
 @Getter
 public class PortfolioResDto {
     private User user;
+    private Long portfolioId;
     private String gender;
     private String phoneNumber;
     private String workplace;
@@ -32,6 +33,7 @@ public class PortfolioResDto {
     public PortfolioResDto(User user, Portfolio portfolio, WorkImage workImage,
                            HairStyle hairStyle1, HairStyle hairStyle2, HairStyle hairStyle3) {
         this.user = user;
+        this.portfolioId = portfolio.getPortfolioId();
         this.gender = portfolio.getGender();
         this.phoneNumber = portfolio.getPhoneNumber();
         this.workplace = portfolio.getWorkplace();

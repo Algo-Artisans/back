@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,9 +33,11 @@ public class UserController {
 
     // 헤어스타일링에 어울리는 디자이너 추천
     @GetMapping("/recommend/hairstylists")
-    public ResponseEntity<PortfolioSearchResDto> recommendHairStylists(HttpServletRequest httpRequest, @RequestParam(name = "hairstyle") String s){
-        return ResponseEntity.ok(portfolioService.recommendHairStylists(httpRequest,s));
+    public ResponseEntity<List<PortfolioResDto>> recommendHairStylists(HttpServletRequest httpRequest, @RequestParam(name = "hairstyle") String s){
+        return ResponseEntity.ok(portfolioService.searchPortfolio(httpRequest,s));
     }
+
+
 
     // 디자이너 좋아요
     @PostMapping("/Like/hairstylist")
