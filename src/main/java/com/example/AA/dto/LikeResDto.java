@@ -1,7 +1,11 @@
 package com.example.AA.dto;
 
-import lombok.Builder;
+import lombok.*;
 
+@Getter
+@NoArgsConstructor
+@Setter
+@Data
 public class LikeResDto {
     private Long portfolioId;
 

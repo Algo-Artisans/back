@@ -1,6 +1,5 @@
 package com.example.AA.controller;
 
-import com.example.AA.dto.*;
 import com.example.AA.global.jwt.OAuthUserService;
 import com.example.AA.service.PortfolioService;
 import lombok.RequiredArgsConstructor;
@@ -38,10 +37,10 @@ public class PortfolioController {
     }
 
     // 디자이너 포트폴리오 키워드 필터링
-    @GetMapping("/search/portfilios")
-    public ResponseEntity<List<PortfolioResDto>> searchPortfolio(HttpServletRequest httpRequest,@RequestParam(name = "hairstyle") String s){
-        return ResponseEntity.ok(portfolioService.searchPortfolio(httpRequest,s));
-    }
+//    @GetMapping("/search/portfilios")
+//    public ResponseEntity<List<PortfolioResDto>> searchPortfolio(HttpServletRequest httpRequest,@RequestParam(name = "hairstyle") String s){
+//        return ResponseEntity.ok(portfolioService.searchPortfolio(httpRequest,s));
+//    }
 
     // 디자이너 포트폴리오 드롭다운 조회
 //    @GetMapping("/dropdown/portfilios")

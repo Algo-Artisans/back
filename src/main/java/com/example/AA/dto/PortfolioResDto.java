@@ -4,6 +4,7 @@ import com.example.AA.entity.HairStyle;
 import com.example.AA.entity.Portfolio;
 import com.example.AA.entity.User;
 import com.example.AA.entity.WorkImage;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -30,6 +31,7 @@ public class PortfolioResDto {
 
     // DesignerDTO를 Designer 엔티티로 변환하는 메서드
     @Builder
+    @QueryProjection
     public PortfolioResDto(User user, Portfolio portfolio, WorkImage workImage,
                            HairStyle hairStyle1, HairStyle hairStyle2, HairStyle hairStyle3) {
         this.user = user;

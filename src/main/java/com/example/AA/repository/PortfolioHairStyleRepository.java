@@ -12,4 +12,6 @@ public interface PortfolioHairStyleRepository extends JpaRepository<PortfolioHai
     List<PortfolioHairStyle> findPortfolioHairStyleByPortfolio(Portfolio portfolio);
 
     List<PortfolioHairStyle> findPortfolioHairStyleByHairStyle_HairNameContaining(String s);
+
+    List<PortfolioHairStyle> findByPortfolio(Portfolio portfolio);
 }
