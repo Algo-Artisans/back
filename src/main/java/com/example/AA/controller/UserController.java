@@ -1,7 +1,6 @@
 package com.example.AA.controller;
 
 
-import com.example.AA.dto.*;
 import com.example.AA.global.jwt.OAuthUserService;
 import com.example.AA.service.PortfolioService;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +31,10 @@ public class UserController {
     }
 
     // 헤어스타일링에 어울리는 디자이너 추천
-    @GetMapping("/recommend/hairstylists")
-    public ResponseEntity<List<PortfolioResDto>> recommendHairStylists(HttpServletRequest httpRequest, @RequestParam(name = "hairstyle") String s){
-        return ResponseEntity.ok(portfolioService.searchPortfolio(httpRequest,s));
-    }
+//    @GetMapping("/recommend/hairstylists")
+//    public ResponseEntity<List<PortfolioResDto>> recommendHairStylists(HttpServletRequest httpRequest, @RequestParam(name = "hairstyle") String s){
+//        return ResponseEntity.ok(portfolioService.searchPortfolio(httpRequest,s));
+//    }
 
 
 

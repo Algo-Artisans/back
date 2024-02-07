@@ -30,4 +30,14 @@ public enum HairName {
 
     private final String value;
     private final String title;
+
+
+    public static boolean containsTitle(String title) {
+        for (HairName hairName : HairName.values()) {
+            if (hairName.title.equals(title)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

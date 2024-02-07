@@ -1,8 +1,6 @@
 package com.example.AA.service;
 
-import com.example.AA.dto.*;
 import com.example.AA.entity.*;
-import com.example.AA.entity.enumtype.HairName;
 import com.example.AA.global.jwt.JwtTokenProvider;
 import com.example.AA.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +17,7 @@ import java.util.stream.Collectors;
 public class PortfolioService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PortfolioRepository portfolioRepository;
+    private final PortfolioSearchRepository portfolioSearchRepository;
     private final LikeRepository likeRepository;
     private final AdvertisementRepository advertisementRepository;
     private final PortfolioHairStyleRepository portfolioHairStyleRepository;
@@ -85,34 +84,16 @@ public class PortfolioService {
     }
 
     // 디자이너 포트폴리오 키워드 필터링 + 헤어스타일링에 어울리는 디자이너 추천
-    public List<PortfolioResDto> searchPortfolio(HttpServletRequest httpRequest, String s) {
-        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
-        List<PortfolioHairStyle> portfolioHairStyles = portfolioHairStyleRepository.findPortfolioHairStyleByHairStyle_HairNameContaining(s);
+//    public List<PortfolioResDto> searchPortfolio(HttpServletRequest httpRequest, String s) {
+//        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+//        List<PortfolioResDto> PortfolioListResDto;
 
-        List<PortfolioResDto> portfolioListResDto = new ArrayList<>();
-        for (PortfolioHairStyle portfolioHairStyle : portfolioHairStyles) {
-            Portfolio portfolio = portfolioHairStyle.getPortfolio();
-            WorkImage savedWorkImage = workImageRepository.findWorkImageByPortfolio(portfolio)
-                    .orElseThrow(() -> new RuntimeException("작업물을 찾을 수 없습니다."));
-            HairStyle hairStyle1 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(0).getHairStyle().getHairStyleId())
-                    .orElseThrow(() -> new RuntimeException(""));
-            HairStyle hairStyle2 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(1).getHairStyle().getHairStyleId())
-                    .orElseThrow(() -> new RuntimeException(""));
-            HairStyle hairStyle3 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(2).getHairStyle().getHairStyleId())
-                    .orElseThrow(() -> new RuntimeException(""));
-            PortfolioResDto portfolioResDto = PortfolioResDto.builder()
-                    .user(user)
-                    .portfolio(portfolio)
-                    .workImage(savedWorkImage)
-                    .hairStyle1(hairStyle1)
-                    .hairStyle2(hairStyle2)
-                    .hairStyle3(hairStyle3)
-                    .build();
-            portfolioListResDto.add(portfolioResDto);
-        }
-
-        return portfolioListResDto;
-    }
+//        if(HairName.containsTitle(s)){
+//            PortfolioListResDto = portfolioSearchRepository.searchHairname(s);
+//        }
+//
+//        return PortfolioListResDto;
+//    }
 
     // 디자이너 포트폴리오 드롭다운 조회
 //    public PortfolioDropDownResDto dropdownPortfolio(HttpServletRequest httpRequest, String s) {
@@ -123,8 +104,17 @@ public class PortfolioService {
     public void deletePortfolio(HttpServletRequest httpRequest) {
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest); // 토큰을 기반으로 사용자 정보 가져오기
         Portfolio portfolio = portfolioRepository.findPortfolioByUser(user); // 사용자에게 연관된 포트폴리오 가져오기
-        portfolioRepository.delete(portfolio); // 포트폴리오 삭제
 
+        List<PortfolioHairStyle> portfolioHairStyles = portfolioHairStyleRepository.findByPortfolio(portfolio);
+        for (PortfolioHairStyle portfolioHairStyle : portfolioHairStyles) {
+            portfolioHairStyleRepository.delete(portfolioHairStyle);
+        }
+
+        List<WorkImage> workImages = workImageRepository.findByPortfolio(portfolio);
+        for (WorkImage workImage : workImages) {
+            workImageRepository.delete(workImage);
+        }
+        portfolioRepository.delete(portfolio); // 포트폴리오 삭제
     }
 
     // 내가 받은 좋아요 조회
@@ -185,17 +175,12 @@ public class PortfolioService {
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
         Portfolio portfolio = portfolioRepository.findPortfolioByPortfolioId(likeReqDto.getPortfolioId());
 
-        Like existingLike = likeRepository.findByUserAndPortfolio(user, portfolio);
-        if (existingLike != null) {
-            throw new IllegalStateException("User already liked this portfolio.");
-        }
-
-        Like like = Like.builder()
+        Like newlike = Like.builder()
                 .user(user)
                 .portfolio(portfolio)
                 .createdAt(LocalDateTime.now())
                 .build();
-        likeRepository.save(like);
+        likeRepository.save(newlike);
 
 
         portfolio.setLikesCount(portfolio.getLikesCount() + 1);
