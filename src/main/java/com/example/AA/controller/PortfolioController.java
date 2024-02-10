@@ -5,6 +5,7 @@ import com.example.AA.global.jwt.OAuthUserService;
 import com.example.AA.service.PortfolioService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class PortfolioController {
@@ -23,7 +25,8 @@ public class PortfolioController {
     @Operation(summary = "내 포트폴리오 등록")
     @PostMapping("/myPortfolio")
     public ResponseEntity<PortfolioResDto> postPortfolio(HttpServletRequest httpRequest, @RequestBody PortfolioReqDto portfolioReqDto) {
-         return ResponseEntity.ok(oAuthUserService.createPortfolio(httpRequest, portfolioReqDto));
+        log.info("postPortfolio");
+        return ResponseEntity.ok(oAuthUserService.createPortfolio(httpRequest, portfolioReqDto));
     }
 
     @Operation(summary = "내 포트폴리오 조회")
@@ -41,8 +44,9 @@ public class PortfolioController {
 
 
     @Operation(summary = "디자이너 포트폴리오 키워드 필터링")
-    @GetMapping("/search/portfilios")
+    @GetMapping("/search/portfolios")
     public ResponseEntity<List<PortfolioResDto>> searchPortfolio(HttpServletRequest httpRequest,@RequestParam(name = "hairstyle") String s){
+        log.info("searchPortfolio");
         return ResponseEntity.ok(portfolioService.searchPortfolio(httpRequest,s));
     }
 

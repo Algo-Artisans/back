@@ -3,24 +3,24 @@ package com.example.AA.repository;
 import com.example.AA.dto.PortfolioResDto;
 import com.example.AA.dto.PortfolioSearchCondition;
 import com.example.AA.dto.QPortfolioResDto;
-import com.example.AA.entity.QHairStyle;
-import com.example.AA.entity.QPortfolio;
-import com.example.AA.entity.QPortfolioHairStyle;
-import com.example.AA.entity.QWorkImage;
+import com.example.AA.entity.*;
 import com.example.AA.entity.enumtype.HairName;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 // 검색 저장소
 
+@Slf4j
 @Repository
 public class PortfolioSearchRepository {
 
@@ -32,61 +32,41 @@ public class PortfolioSearchRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-//    public List<PortfolioResDto> searchHairname(String hairName) {
-//        QPortfolio portfolio = QPortfolio.portfolio;
-//        QPortfolioHairStyle portfolioHairStyle = QPortfolioHairStyle.portfolioHairStyle;
-//        QHairStyle hairStyle = QHairStyle.hairStyle;
-//        QWorkImage workImage = QWorkImage.workImage;
-//
-//        Predicate predicate = null;
-//        if (!StringUtils.isEmpty(hairName)) {
-//            predicate = hairStyle.hairName.eq(HairName.valueOf(hairName));
-//        }
-
-//        return queryFactory
-//                .selectDistinct(new QPortfolioResDto(
-//                        portfolio.user,
-//                        portfolio,
-//                        workImage,
-//                        ExpressionUtils.as(
-//                                JPAExpressions
-//                                        .select(hairStyle.hairName)
-//                                        .from(portfolioHairStyle)
-//                                        .join(portfolioHairStyle.hairStyle, hairStyle)
-//                                        .where(portfolioHairStyle.portfolio.eq(portfolio))
-//                                        .orderBy(portfolioHairStyle.id.asc())
-//                                        .limit(1),
-//                                "hairStyle1"
-//                        ),
-//                        ExpressionUtils.as(
-//                                JPAExpressions
-//                                        .select(hairStyle.hairName)
-//                                        .from(portfolioHairStyle)
-//                                        .join(portfolioHairStyle.hairStyle, hairStyle)
-//                                        .where(portfolioHairStyle.portfolio.eq(portfolio))
-//                                        .orderBy(portfolioHairStyle.id.asc())
-//                                        .limit(1, 1),
-//                                "hairStyle2"
-//                        ),
-//                        ExpressionUtils.as(
-//                                JPAExpressions
-//                                        .select(hairStyle.hairName)
-//                                        .from(portfolioHairStyle)
-//                                        .join(portfolioHairStyle.hairStyle, hairStyle)
-//                                        .where(portfolioHairStyle.portfolio.eq(portfolio))
-//                                        .orderBy(portfolioHairStyle.id.asc())
-//                                        .limit(1, 2),
-//                                "hairStyle3"
-//                        )
-//                ))
-//                .from(portfolio)
-//                .leftJoin(portfolio, portfolioHairStyle.portfolio)
-//                .leftJoin(portfolioHairStyle.hairStyle, hairStyle)
-//                .leftJoin(portfolio, workImage.portfolio)
-//                .where(predicate)
-//                .fetch();
-// }
-
+    public List<PortfolioResDto> searchHairname(String hairName) {
+        log.info("searchHairname1");
+        QPortfolio portfolio = QPortfolio.portfolio;
+        QPortfolioHairStyle portfolioHairStyle = QPortfolioHairStyle.portfolioHairStyle;
+        QWorkImage workImage = QWorkImage.workImage;
+        QHairStyle hairStyle1 = new QHairStyle("hairStyle1");
+        QHairStyle hairStyle2 = new QHairStyle("hairStyle2");
+        QHairStyle hairStyle3 = new QHairStyle("hairStyle3");
+        log.info("searchHairname2");
+        Predicate predicate = null;
+        if (!StringUtils.isEmpty(hairName)) {
+            predicate = portfolioHairStyle.hairStyle.hairName.eq(HairName.valueOf(hairName));
+        }
+        log.info(predicate.toString());
+        return queryFactory
+                .selectDistinct(new QPortfolioResDto(
+                        portfolio.user,
+                        portfolio,
+                        workImage,
+                        hairStyle1,
+                        hairStyle2,
+                        hairStyle3
+                ))
+                .from(portfolio)
+                .leftJoin(portfolio.portfolioHairStyles, portfolioHairStyle)
+                .leftJoin(portfolio.workImages, workImage)
+                .leftJoin(portfolioHairStyle.hairStyle, hairStyle1).on(hairStyle1.hairStyleId.eq(portfolioHairStyle.hairStyle.hairStyleId))
+                .leftJoin(portfolioHairStyle.hairStyle, hairStyle2).on(hairStyle2.hairStyleId.ne(hairStyle1.hairStyleId))
+                .leftJoin(portfolioHairStyle.hairStyle, hairStyle3).on(hairStyle3.hairStyleId.ne(hairStyle1.hairStyleId), hairStyle3.hairStyleId.ne(hairStyle2.hairStyleId))
+                .where(predicate)
+                .fetch();
+    }
 
 }
+
+
+
 
