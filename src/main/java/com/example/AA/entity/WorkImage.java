@@ -20,9 +20,9 @@ public class WorkImage {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "portfolio_id")
-    private Portfolio portfolio;
+    private Portfolio portfolio; //jiwon 1
 
-    @Column(name = "image_url_1", nullable = true)
+    @Column(name = "image_url_1", nullable = true) //s3.url
     private String imageUrl1;
 
     @Column(name = "image_url_2", nullable = true)

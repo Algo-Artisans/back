@@ -17,7 +17,7 @@
     <p>
         <!-- 권한 선택 버튼 -->
         <button onclick="selectRole('GUEST')">Select GEUST Role</button>
-        <button onclick="selectRole('BRAND')">Select BRAND Role</button>
+        <button onclick="selectRole('DESIGNER')">Select DESIGNER Role</button>
     </p>
     {{/nickname}}
     {{^nickname}}
@@ -74,7 +74,7 @@
 <script>
    function selectRole(role) {
            // 사용자의 권한을 선택하고 서버로 업데이트
-           const token = 'accessToken';
+           const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzMjQwNzcyOTU1Iiwicm9sZXMiOiJudWxsIiwiaWF0IjoxNzA3NTY5OTM2LCJleHAiOjE3MDc1NzcxMzZ9.8e95nEY8CA8bUnyRMvvgAFtV5rOPcObz_LDY5W1eyk4';
            fetch('/select-role?role=' + role, {
                method: 'POST',
                headers: {
