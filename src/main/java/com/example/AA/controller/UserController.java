@@ -1,8 +1,10 @@
 package com.example.AA.controller;
 
 
+import com.example.AA.dto.*;
 import com.example.AA.global.jwt.OAuthUserService;
 import com.example.AA.service.PortfolioService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +19,13 @@ public class UserController {
     private final OAuthUserService oAuthUserService;
     private final PortfolioService portfolioService;
 
-    // 고객 정보 보기
+    @Operation(summary = "내 정보 조회")
     @GetMapping("/information")
     public OAuthUserResDto getUserInfo(HttpServletRequest httpRequest) {
         return oAuthUserService.getUser(httpRequest);
     }
 
-    // 얼굴형 AI 등록
+    @Operation(summary = "얼굴형 AI 등록")
     @PostMapping("/face-shape")
     public FaceShapeResDto updateFaceShape(HttpServletRequest httpRequest, @RequestBody FaceShapeReqDto faceShapeReqDto) {
         oAuthUserService.updateFaceShape(httpRequest,faceShapeReqDto);
@@ -37,14 +39,13 @@ public class UserController {
 //    }
 
 
-
-    // 디자이너 좋아요
+    @Operation(summary = "디자이너 좋아요")
     @PostMapping("/Like/hairstylist")
     public ResponseEntity<LikeResDto> likeHairstylist(HttpServletRequest httpRequest, @RequestBody LikeReqDto likeReqDto) {
         return ResponseEntity.ok(portfolioService.likeHairstylist(httpRequest,likeReqDto));
     }
 
-    // 내가 누른 디자이너 좋아요 확인
+    @Operation(summary = "내가 누른 디자이너 좋아요 확인")
     @GetMapping("/Like/hairstylists")
     public ResponseEntity<List<LikeResDto>> getLikeHairstylists(HttpServletRequest httpRequest) {
         return ResponseEntity.ok(portfolioService.getLikeHairstylists(httpRequest));

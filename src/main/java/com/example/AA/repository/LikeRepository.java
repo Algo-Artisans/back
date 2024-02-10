@@ -1,4 +1,5 @@
 package com.example.AA.repository;
+
 import com.example.AA.entity.Like;
 import com.example.AA.entity.Portfolio;
 import com.example.AA.entity.User;
@@ -8,8 +9,6 @@ import java.util.List;
 
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
-
-    Like findByUserAndPortfolio(User user, Portfolio portfolio);
 
     List<Like> findLikesByUser(User user);
 
