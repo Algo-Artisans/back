@@ -43,7 +43,8 @@ public class PortfolioSearchRepository {
         log.info("searchHairname2");
         Predicate predicate = null;
         if (!StringUtils.isEmpty(hairName)) {
-            predicate = portfolioHairStyle.hairStyle.hairName.eq(HairName.valueOf(hairName));
+            HairName convertedHairName = HairName.valueOf(hairName);
+            predicate = portfolioHairStyle.hairStyle.hairName.eq(convertedHairName);
         }
         log.info(predicate.toString());
         return queryFactory

@@ -2,9 +2,10 @@ package com.example.AA.entity.enumtype;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
+@Slf4j
 @RequiredArgsConstructor
 public enum HairName {
     // Heart
@@ -32,12 +33,14 @@ public enum HairName {
     private final String title;
 
 
-    public static boolean containsTitle(String title) {
+    public static HairName containsTitle(String title) {
         for (HairName hairName : HairName.values()) {
             if (hairName.title.equals(title)) {
-                return true;
+                log.info("존재");
+                return hairName;
             }
         }
-        return false;
+        log.info("없음");
+        return null;
     }
 }

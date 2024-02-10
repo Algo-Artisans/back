@@ -90,15 +90,19 @@ public class PortfolioService {
     // 디자이너 포트폴리오 키워드 필터링 + 헤어스타일링에 어울리는 디자이너 추천
     public List<PortfolioResDto> searchPortfolio(HttpServletRequest httpRequest, String s) {
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
-        List<PortfolioResDto> PortfolioListResDto = new ArrayList<>();
+        List<PortfolioResDto> portfolioListResDto = new ArrayList<>(); // 변수명 수정
         log.info("searchPortfolio");
-        if(HairName.containsTitle(s)){
-            log.info("searchPortfolio containTitle");
-            PortfolioListResDto = portfolioSearchRepository.searchHairname(s);
+
+        HairName hairName = HairName.containsTitle(s);
+        if (hairName != null) {
+            log.info("searchPortfolio containsTitle");
+            portfolioListResDto = portfolioSearchRepository.searchHairname(hairName.name());
         }
 
-        return PortfolioListResDto;
+        return portfolioListResDto;
     }
+
+
 
     // 디자이너 포트폴리오 드롭다운 조회
 //    public PortfolioDropDownResDto dropdownPortfolio(HttpServletRequest httpRequest, String s) {
