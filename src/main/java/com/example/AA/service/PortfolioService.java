@@ -1,6 +1,8 @@
 package com.example.AA.service;
 
+import com.example.AA.dto.*;
 import com.example.AA.entity.*;
+import com.example.AA.entity.enumtype.HairName;
 import com.example.AA.global.jwt.JwtTokenProvider;
 import com.example.AA.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -84,16 +86,16 @@ public class PortfolioService {
     }
 
     // 디자이너 포트폴리오 키워드 필터링 + 헤어스타일링에 어울리는 디자이너 추천
-//    public List<PortfolioResDto> searchPortfolio(HttpServletRequest httpRequest, String s) {
-//        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
-//        List<PortfolioResDto> PortfolioListResDto;
+    public List<PortfolioResDto> searchPortfolio(HttpServletRequest httpRequest, String s) {
+        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+        List<PortfolioResDto> PortfolioListResDto = new ArrayList<>();
 
-//        if(HairName.containsTitle(s)){
-//            PortfolioListResDto = portfolioSearchRepository.searchHairname(s);
-//        }
-//
-//        return PortfolioListResDto;
-//    }
+        if(HairName.containsTitle(s)){
+            PortfolioListResDto = portfolioSearchRepository.searchHairname(s);
+        }
+
+        return PortfolioListResDto;
+    }
 
     // 디자이너 포트폴리오 드롭다운 조회
 //    public PortfolioDropDownResDto dropdownPortfolio(HttpServletRequest httpRequest, String s) {
