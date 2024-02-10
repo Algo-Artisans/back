@@ -1,13 +1,10 @@
 package com.example.AA.global.jwt;
 
-import com.example.AA.dto.FaceShapeReqDto;
-import com.example.AA.dto.OAuthUserResDto;
-import com.example.AA.entity.FaceShape;
-import com.example.AA.entity.Role;
-import com.example.AA.entity.User;
-import com.example.AA.dto.OAuthAttributesResDto;
-import com.example.AA.dto.SessionUser;
-import com.example.AA.repository.UserRepository;
+import com.example.AA.dto.*;
+import com.example.AA.entity.*;
+import com.example.AA.entity.enumtype.FaceShape;
+import com.example.AA.entity.enumtype.Role;
+import com.example.AA.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,15 +16,11 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,7 +29,10 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
     private final UserRepository userRepository;
     private final HttpSession httpSession;
     private final JwtTokenProvider jwtTokenProvider;
-
+    private final PortfolioRepository portfolioRepository;
+    private final WorkImageRepository workImageRepository;
+    private final HairStyleRepository hairStyleRepository;
+    private final PortfolioHairStyleRepository portfolioHairStyleRepository;
     //회원가입 처리
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -129,4 +125,84 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
             throw new RuntimeException("얼굴형 처리 중 에러가 발생했습니다.");
         }
     }
+
+    public PortfolioResDto createPortfolio(HttpServletRequest httpRequest, PortfolioReqDto portfolioReqDto) {
+        // 클라이언트 정보를 토큰에서 추출
+        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+
+        // 디자이너인 경우에만 포트폴리오 생성
+        if (user.isDesigner()) {
+            // 포트폴리오 생성
+            Portfolio portfolio = Portfolio.builder()
+                    .user(user)
+                    .gender(portfolioReqDto.getGender())
+                    .phoneNumber(portfolioReqDto.getPhoneNumber())
+                    .workplace(portfolioReqDto.getWorkplace())
+                    .snsAddress(portfolioReqDto.getSnsAddress())
+                    .introduction(portfolioReqDto.getIntroduction())
+                    .likesCount(portfolioReqDto.getLikesCount())
+                    .profileURL(portfolioReqDto.getProfileURL())
+                    .build();
+
+            WorkImage workImage = WorkImage.builder()
+                    .portfolio(portfolio)
+                    .imageUrl1(portfolioReqDto.getImageUrl1())
+                    .imageUrl2(portfolioReqDto.getImageUrl2())
+                    .imageUrl3(portfolioReqDto.getImageUrl3())
+                    .imageUrl4(portfolioReqDto.getImageUrl4())
+                    .build();
+
+            // Save HairStyles
+            List<HairStyle> hairStyles = new ArrayList<>();
+            for (String hairName : Arrays.asList(portfolioReqDto.getHairName1(), portfolioReqDto.getHairName2(), portfolioReqDto.getHairName3())) {
+
+                HairStyle hairStyle = HairStyle.builder()
+                        //.faceShape()
+                        .hairName(hairName)
+                        .build();
+                hairStyles.add(hairStyle);
+                hairStyleRepository.save(hairStyle);
+            }
+
+            // Save PortfolioHairStyles
+            for (HairStyle hairStyle : hairStyles) {
+                PortfolioHairStyle portfolioHairStyle = new PortfolioHairStyle(portfolio, hairStyle);
+                portfolioHairStyleRepository.save(portfolioHairStyle);
+            }
+
+
+            // 포트폴리오 저장
+            portfolioRepository.save(portfolio);
+            workImageRepository.save(workImage);
+
+
+            // 저장된 포트폴리오 정보를 조회하여 PortfolioResDto 객체 생성
+            Portfolio savedPortfolio = portfolioRepository.findPortfolioByUser(user);
+            WorkImage savedWorkImage = workImageRepository.findWorkImageByPortfolio(portfolio)
+                    .orElseThrow(() -> new RuntimeException("작업물을 찾을 수 없습니다."));
+
+            List<PortfolioHairStyle> portfolioHairStyles = portfolioHairStyleRepository.findPortfolioHairStyleByPortfolio(portfolio);
+
+            HairStyle hairStyle1 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(0).getHairStyle().getHairStyleId())
+                    .orElseThrow(() -> new RuntimeException(""));
+            HairStyle hairStyle2 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(1).getHairStyle().getHairStyleId())
+                    .orElseThrow(() -> new RuntimeException(""));
+            HairStyle hairStyle3 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(2).getHairStyle().getHairStyleId())
+                    .orElseThrow(() -> new RuntimeException(""));
+            
+            // hairstyle 가져오는 코드
+
+            return PortfolioResDto.builder()
+                    .user(user)
+                    .portfolio(savedPortfolio)
+                    .workImage(savedWorkImage)
+                    .hairStyle1(hairStyle1)
+                    .hairStyle2(hairStyle2)
+                    .hairStyle3(hairStyle3)
+                    .build();
+        } else {
+            throw new RuntimeException("디자이너가 아닌 사용자는 포트폴리오를 생성할 수 없습니다.");
+        }
+    }
+
 }

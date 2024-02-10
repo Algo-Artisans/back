@@ -1,6 +1,6 @@
 package com.example.AA.dto;
 
-import com.example.AA.entity.FaceShape;
+import com.example.AA.entity.enumtype.FaceShape;
 import com.example.AA.entity.User;
 import lombok.Builder;
 import lombok.Getter;
