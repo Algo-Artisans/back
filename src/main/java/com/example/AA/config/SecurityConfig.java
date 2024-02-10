@@ -1,7 +1,7 @@
 package com.example.AA.config;
 
 
-import com.example.AA.entity.Role;
+import com.example.AA.entity.enumtype.Role;
 import com.example.AA.global.jwt.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -76,10 +76,10 @@ public class SecurityConfig {
                         "/swagger-ui.html",
                         "/webjars/**",
                         "/swagger-resources/**","/", "/css/**", "/images/**", //resource/static을 기본경로로 자원에 url로 접근할 수 있다.
-                        "/js/**", "/h2/**", "/select-role", "/receiveImage", "/hello","/information", "/face-shape", "/file/**"
+                        "/js/**", "/h2/**", "/select-role", "/receiveImage", "/file/**", "/api/v1/**"
                 ).permitAll()
-                .antMatchers("/api/v1/**").hasRole(Role.
-                        USER.name())
+//                .antMatchers("/api/v1/**").hasRole(Role.
+//                        USER.name())
                 .anyRequest().authenticated()
                 .and()
                 .logout()

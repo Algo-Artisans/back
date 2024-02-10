@@ -1,5 +1,7 @@
 package com.example.AA.entity;
 
+import com.example.AA.entity.enumtype.FaceShape;
+import com.example.AA.entity.enumtype.Role;
 import com.sun.istack.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -77,6 +79,10 @@ public class User{
 
     public void setRole(String role) {
         this.role = Role.valueOf(role);
+    }
+
+    public boolean isDesigner() {
+        return this.getRole() == Role.DESIGNER;
     }
 
     public void updateDeleteFlag() {

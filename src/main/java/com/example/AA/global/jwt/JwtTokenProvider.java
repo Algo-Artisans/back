@@ -1,8 +1,8 @@
 package com.example.AA.global.jwt;
 
+import com.example.AA.dto.OAuthUserResDto;
 import com.example.AA.global.redis.RedisService;
 import com.example.AA.entity.User;
-import com.example.AA.dto.OAuthUserResDto;
 import com.example.AA.repository.UserRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
