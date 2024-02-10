@@ -6,6 +6,7 @@ import com.example.AA.entity.enumtype.HairName;
 import com.example.AA.global.jwt.JwtTokenProvider;
 import com.example.AA.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PortfolioService {
     private final JwtTokenProvider jwtTokenProvider;
@@ -56,7 +58,7 @@ public class PortfolioService {
 
 
     // 디자이너 포트폴리오 전체 조회
-    public List<PortfolioResDto> getPortfolios(HttpServletRequest httpRequest) {
+    public List<PortfolioResDto> getPortfolios(HttpServletRequest httpRequest) { // accesstoken
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
         List<Portfolio> portfolioList = portfolioRepository.findAll();
         List<PortfolioResDto> portfolioListResDto = new ArrayList<>();
@@ -89,8 +91,9 @@ public class PortfolioService {
     public List<PortfolioResDto> searchPortfolio(HttpServletRequest httpRequest, String s) {
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
         List<PortfolioResDto> PortfolioListResDto = new ArrayList<>();
-
+        log.info("searchPortfolio");
         if(HairName.containsTitle(s)){
+            log.info("searchPortfolio containTitle");
             PortfolioListResDto = portfolioSearchRepository.searchHairname(s);
         }
 

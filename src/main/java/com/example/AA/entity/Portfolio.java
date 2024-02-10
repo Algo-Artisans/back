@@ -4,6 +4,7 @@ package com.example.AA.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -19,13 +20,13 @@ public class Portfolio {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true)
-    private User user;
+    private User user; // 01
 
     @Column
-    private String gender;
+    private String gender; //
 
     @Column(name = "phone_number")
-    private String phoneNumber;
+    private String phoneNumber; //
 
     @Column
     private String workplace;
@@ -41,6 +42,12 @@ public class Portfolio {
 
     @Column(name = "profile_url")
     private String profileURL;
+
+    @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
+    private List<PortfolioHairStyle> portfolioHairStyles;
+
+    @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
+    private List<WorkImage> workImages;
 
     @Builder
     public Portfolio(User user, String gender, String phoneNumber, String workplace,

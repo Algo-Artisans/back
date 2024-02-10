@@ -11,7 +11,7 @@ import lombok.Getter;
 
 
 @Getter
-public class PortfolioResDto {
+public class PortfolioResDto2 {
     private User user;
     private Long portfolioId;
     private String gender;
@@ -32,7 +32,7 @@ public class PortfolioResDto {
     // DesignerDTO를 Designer 엔티티로 변환하는 메서드
     @Builder
     @QueryProjection
-    public PortfolioResDto(User user, Portfolio portfolio, WorkImage workImage,
+    public PortfolioResDto2(User user, Portfolio portfolio, WorkImage workImage,
                            HairStyle hairStyle1, HairStyle hairStyle2, HairStyle hairStyle3) {
         this.user = user;
         this.portfolioId = portfolio.getPortfolioId();

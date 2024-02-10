@@ -17,14 +17,14 @@ public class HairStyle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hair_style_id")
-    private Long hairStyleId;
+    private Long hairStyleId; // 1
 
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "face_shape_id",nullable = true)
-    private FaceShape faceShape;
+    private FaceShape faceShape; //ㅣlong
 
     @Column(name = "hair_name",nullable = true)
-    private HairName hairName;
+    private HairName hairName; // 스트레이트
 
     @Builder
     public HairStyle(String hairName) {
