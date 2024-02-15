@@ -7,6 +7,7 @@ import com.example.AA.entity.*;
 import com.example.AA.entity.enumtype.HairName;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -32,20 +33,17 @@ public class PortfolioSearchRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public List<PortfolioResDto> searchHairname(String hairName) {
-        log.info("searchHairname1");
+    public List<PortfolioResDto> searchHairname(String s) { //아이롱펌 title
+
         QPortfolio portfolio = QPortfolio.portfolio;
         QPortfolioHairStyle portfolioHairStyle = QPortfolioHairStyle.portfolioHairStyle;
         QWorkImage workImage = QWorkImage.workImage;
         QHairStyle hairStyle1 = new QHairStyle("hairStyle1");
         QHairStyle hairStyle2 = new QHairStyle("hairStyle2");
         QHairStyle hairStyle3 = new QHairStyle("hairStyle3");
-        log.info("searchHairname2");
-        Predicate predicate = null;
-        if (!StringUtils.isEmpty(hairName)) {
-            predicate = portfolioHairStyle.hairStyle.hairName.eq(HairName.valueOf(hairName));
-        }
-        log.info(predicate.toString());
+        String hairName = HairName.valueOf(s).getKeyword();
+        BooleanExpression hairNameEqualsS = portfolioHairStyle.hairStyle.hairName.eq(hairName);
+
         return queryFactory
                 .selectDistinct(new QPortfolioResDto(
                         portfolio.user,
@@ -61,7 +59,7 @@ public class PortfolioSearchRepository {
                 .leftJoin(portfolioHairStyle.hairStyle, hairStyle1).on(hairStyle1.hairStyleId.eq(portfolioHairStyle.hairStyle.hairStyleId))
                 .leftJoin(portfolioHairStyle.hairStyle, hairStyle2).on(hairStyle2.hairStyleId.ne(hairStyle1.hairStyleId))
                 .leftJoin(portfolioHairStyle.hairStyle, hairStyle3).on(hairStyle3.hairStyleId.ne(hairStyle1.hairStyleId), hairStyle3.hairStyleId.ne(hairStyle2.hairStyleId))
-                .where(predicate)
+                .where(hairNameEqualsS)
                 .fetch();
     }
 

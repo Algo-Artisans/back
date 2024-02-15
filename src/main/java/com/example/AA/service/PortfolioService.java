@@ -92,7 +92,7 @@ public class PortfolioService {
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
         List<PortfolioResDto> PortfolioListResDto = new ArrayList<>();
         log.info("searchPortfolio");
-        if(HairName.containsTitle(s)){
+        if(HairName.containsKeyword(s)){
             log.info("searchPortfolio containTitle");
             PortfolioListResDto = portfolioSearchRepository.searchHairname(s);
         }
