@@ -1,19 +1,11 @@
 package com.example.AA.repository;
 
 import com.example.AA.dto.PortfolioResDto;
-import com.example.AA.dto.PortfolioSearchCondition;
-import com.example.AA.dto.QPortfolioResDto;
 import com.example.AA.entity.*;
 import com.example.AA.entity.enumtype.HairName;
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
-
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,38 +25,33 @@ public class PortfolioSearchRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public List<PortfolioResDto> searchHairname(String s) { //아이롱펌 title
+    public List<PortfolioResDto> searchHairname(HairName hairName) { //아이롱펌 title
 
         QPortfolio portfolio = QPortfolio.portfolio;
-        QPortfolioHairStyle portfolioHairStyle = QPortfolioHairStyle.portfolioHairStyle;
+        QPortfolioHairStyle qportfolioHairStyle = QPortfolioHairStyle.portfolioHairStyle;
         QWorkImage workImage = QWorkImage.workImage;
-        QHairStyle hairStyle1 = new QHairStyle("hairStyle1");
-        QHairStyle hairStyle2 = new QHairStyle("hairStyle2");
-        QHairStyle hairStyle3 = new QHairStyle("hairStyle3");
-        String hairName = HairName.valueOf(s).getKeyword();
-        BooleanExpression hairNameEqualsS = portfolioHairStyle.hairStyle.hairName.eq(hairName);
+        List<Long> hairStyleIdsByEnum = queryFactory.select(QHairStyle.hairStyle.hairStyleId).from(QHairStyle.hairStyle).where(QHairStyle.hairStyle.hairName.eq(hairName)).fetch();
 
-        return queryFactory
-                .selectDistinct(new QPortfolioResDto(
-                        portfolio.user,
-                        portfolio,
-                        workImage,
-                        hairStyle1,
-                        hairStyle2,
-                        hairStyle3
-                ))
-                .from(portfolio)
-                .leftJoin(portfolio.portfolioHairStyles, portfolioHairStyle)
-                .leftJoin(portfolio.workImages, workImage)
-                .leftJoin(portfolioHairStyle.hairStyle, hairStyle1).on(hairStyle1.hairStyleId.eq(portfolioHairStyle.hairStyle.hairStyleId))
-                .leftJoin(portfolioHairStyle.hairStyle, hairStyle2).on(hairStyle2.hairStyleId.ne(hairStyle1.hairStyleId))
-                .leftJoin(portfolioHairStyle.hairStyle, hairStyle3).on(hairStyle3.hairStyleId.ne(hairStyle1.hairStyleId), hairStyle3.hairStyleId.ne(hairStyle2.hairStyleId))
-                .where(hairNameEqualsS)
+        // PortfolioHairStyles에서 portfolioId를 가져온다 찾는다.
+        List<Long> portfolioIds = queryFactory
+                .selectDistinct(qportfolioHairStyle.portfolio.portfolioId)
+                .from(qportfolioHairStyle)
+                .where(qportfolioHairStyle.hairStyle.hairStyleId.in(hairStyleIdsByEnum))
                 .fetch();
+
+        // in 절로 가져온 Portfolio의 id의 집합을 이용하여 Portfolio 객체를 가져온다. 이 때, hairstyleportfolio 테이블을 fetchjoin으로 가져온다.
+        List<Portfolio> portfolios = queryFactory
+                .selectFrom(portfolio)
+                .distinct()
+                .leftJoin(portfolio.user).fetchJoin()
+                .leftJoin(portfolio.portfolioHairStyles, qportfolioHairStyle).fetchJoin()
+                .leftJoin(portfolio.workImage, workImage)
+                .where(portfolio.portfolioId.in(portfolioIds))
+                .fetch();
+
+        return portfolios.stream()
+                .map(PortfolioResDto::new)
+                .collect(Collectors.toList());
     }
 
 }
-
-
-
-

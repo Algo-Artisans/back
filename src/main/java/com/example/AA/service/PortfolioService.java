@@ -32,27 +32,12 @@ public class PortfolioService {
     public PortfolioResDto getPortfolio(HttpServletRequest httpRequest) {
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
         Portfolio portfolio = portfolioRepository.findPortfolioByUser(user);
-        WorkImage savedWorkImage = workImageRepository.findWorkImageByPortfolio(portfolio)
-                .orElseThrow(() -> new RuntimeException("작업물을 찾을 수 없습니다."));
-        List<PortfolioHairStyle> portfolioHairStyles = portfolioHairStyleRepository.findPortfolioHairStyleByPortfolio(portfolio);
+        log.info("portfolio is :" + portfolio.getPortfolioId());
 
-        HairStyle hairStyle1 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(0).getHairStyle().getHairStyleId())
-                .orElseThrow(() -> new RuntimeException(""));
-        HairStyle hairStyle2 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(1).getHairStyle().getHairStyleId())
-                .orElseThrow(() -> new RuntimeException(""));
-        HairStyle hairStyle3 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(2).getHairStyle().getHairStyleId())
-                .orElseThrow(() -> new RuntimeException(""));
+        // PortfolioResDto 객체 생성
+        PortfolioResDto portfolioResDto = new PortfolioResDto(portfolio);
 
-        // hairstyle 가져오는 코드
-
-        return PortfolioResDto.builder()
-                .user(user)
-                .portfolio(portfolio)
-                .workImage(savedWorkImage)
-                .hairStyle1(hairStyle1)
-                .hairStyle2(hairStyle2)
-                .hairStyle3(hairStyle3)
-                .build();
+        return portfolioResDto;
     }
 
 
@@ -63,23 +48,10 @@ public class PortfolioService {
         List<Portfolio> portfolioList = portfolioRepository.findAll();
         List<PortfolioResDto> portfolioListResDto = new ArrayList<>();
         for (Portfolio portfolio : portfolioList) {
-            WorkImage savedWorkImage = workImageRepository.findWorkImageByPortfolio(portfolio)
-                    .orElseThrow(() -> new RuntimeException("작업물을 찾을 수 없습니다."));
             List<PortfolioHairStyle> portfolioHairStyles = portfolioHairStyleRepository.findPortfolioHairStyleByPortfolio(portfolio);
 
-            HairStyle hairStyle1 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(0).getHairStyle().getHairStyleId())
-                    .orElseThrow(() -> new RuntimeException(""));
-            HairStyle hairStyle2 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(1).getHairStyle().getHairStyleId())
-                    .orElseThrow(() -> new RuntimeException(""));
-            HairStyle hairStyle3 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(2).getHairStyle().getHairStyleId())
-                    .orElseThrow(() -> new RuntimeException(""));
             PortfolioResDto portfolioResDto = PortfolioResDto.builder()
-                    .user(user)
                     .portfolio(portfolio)
-                    .workImage(savedWorkImage)
-                    .hairStyle1(hairStyle1)
-                    .hairStyle2(hairStyle2)
-                    .hairStyle3(hairStyle3)
                     .build();
             portfolioListResDto.add(portfolioResDto);
         }
@@ -90,15 +62,19 @@ public class PortfolioService {
     // 디자이너 포트폴리오 키워드 필터링 + 헤어스타일링에 어울리는 디자이너 추천
     public List<PortfolioResDto> searchPortfolio(HttpServletRequest httpRequest, String s) {
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
-        List<PortfolioResDto> PortfolioListResDto = new ArrayList<>();
+        List<PortfolioResDto> portfolioListResDto = new ArrayList<>(); // 변수명 수정
         log.info("searchPortfolio");
-        if(HairName.containsKeyword(s)){
-            log.info("searchPortfolio containTitle");
-            PortfolioListResDto = portfolioSearchRepository.searchHairname(s);
+
+        HairName hairName = HairName.containsTitle(s);
+        if (hairName != null) {
+            log.info("searchPortfolio containsTitle");
+            portfolioListResDto = portfolioSearchRepository.searchHairname(hairName);
         }
 
-        return PortfolioListResDto;
+        return portfolioListResDto;
     }
+
+
 
     // 디자이너 포트폴리오 드롭다운 조회
 //    public PortfolioDropDownResDto dropdownPortfolio(HttpServletRequest httpRequest, String s) {

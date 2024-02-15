@@ -23,6 +23,7 @@ public class HairStyle {
     @JoinColumn(name = "face_shape_id",nullable = true)
     private FaceShape faceShape; //ㅣlong
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "hair_name",nullable = true)
     private HairName hairName; // 스트레이트
 

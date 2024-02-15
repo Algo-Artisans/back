@@ -18,7 +18,7 @@ public class WorkImage {
     @Column(name = "work_image_id")
     private Long workImageId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio; //jiwon 1
 

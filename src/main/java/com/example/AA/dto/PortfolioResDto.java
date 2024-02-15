@@ -1,13 +1,13 @@
 package com.example.AA.dto;
 
-import com.example.AA.entity.HairStyle;
-import com.example.AA.entity.Portfolio;
-import com.example.AA.entity.User;
-import com.example.AA.entity.WorkImage;
+import com.example.AA.entity.*;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Getter
@@ -32,9 +32,15 @@ public class PortfolioResDto {
     // DesignerDTO를 Designer 엔티티로 변환하는 메서드
     @Builder
     @QueryProjection
-    public PortfolioResDto(User user, Portfolio portfolio, WorkImage workImage,
-                           HairStyle hairStyle1, HairStyle hairStyle2, HairStyle hairStyle3) {
-        this.user = user;
+    public PortfolioResDto(Portfolio portfolio) {
+        WorkImage workImage = portfolio.getWorkImage();
+        List<PortfolioHairStyle> portfolioHairStyles = portfolio.getPortfolioHairStyles();
+        List<HairStyle> hairStyles = portfolioHairStyles.stream()
+                .map(PortfolioHairStyle::getHairStyle)
+                .collect(Collectors.toList());
+
+
+        this.user = portfolio.getUser();
         this.portfolioId = portfolio.getPortfolioId();
         this.gender = portfolio.getGender();
         this.phoneNumber = portfolio.getPhoneNumber();
@@ -47,9 +53,8 @@ public class PortfolioResDto {
         this.imageUrl2 = workImage.getImageUrl2();
         this.imageUrl3 = workImage.getImageUrl3();
         this.imageUrl4 = workImage.getImageUrl4();
-        this.hairStyle1 = String.valueOf(hairStyle1.getHairName());
-        this.hairStyle2 = String.valueOf(hairStyle2.getHairName());
-        this.hairStyle3 = String.valueOf(hairStyle3.getHairName());
+        this.hairStyle1 = String.valueOf(hairStyles.get(0).getHairName());
+        this.hairStyle2 = String.valueOf(hairStyles.get(1).getHairName());
+        this.hairStyle3 = String.valueOf(hairStyles.get(2).getHairName());
     }
-
 }

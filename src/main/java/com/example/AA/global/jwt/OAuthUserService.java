@@ -178,27 +178,11 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
 
             // 저장된 포트폴리오 정보를 조회하여 PortfolioResDto 객체 생성
             Portfolio savedPortfolio = portfolioRepository.findPortfolioByUser(user);
-            WorkImage savedWorkImage = workImageRepository.findWorkImageByPortfolio(portfolio)
-                    .orElseThrow(() -> new RuntimeException("작업물을 찾을 수 없습니다."));
-
-            List<PortfolioHairStyle> portfolioHairStyles = portfolioHairStyleRepository.findPortfolioHairStyleByPortfolio(portfolio);
-
-            HairStyle hairStyle1 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(0).getHairStyle().getHairStyleId())
-                    .orElseThrow(() -> new RuntimeException(""));
-            HairStyle hairStyle2 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(1).getHairStyle().getHairStyleId())
-                    .orElseThrow(() -> new RuntimeException(""));
-            HairStyle hairStyle3 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(2).getHairStyle().getHairStyleId())
-                    .orElseThrow(() -> new RuntimeException(""));
-            
+            log.info(String.valueOf(savedPortfolio));
             // hairstyle 가져오는 코드
 
             return PortfolioResDto.builder()
-                    .user(user)
                     .portfolio(savedPortfolio)
-                    .workImage(savedWorkImage)
-                    .hairStyle1(hairStyle1)
-                    .hairStyle2(hairStyle2)
-                    .hairStyle3(hairStyle3)
                     .build();
         } else {
             throw new RuntimeException("디자이너가 아닌 사용자는 포트폴리오를 생성할 수 없습니다.");

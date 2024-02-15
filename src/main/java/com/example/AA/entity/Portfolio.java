@@ -46,8 +46,8 @@ public class Portfolio {
     @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
     private List<PortfolioHairStyle> portfolioHairStyles;
 
-    @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
-    private List<WorkImage> workImages;
+    @OneToOne(mappedBy = "portfolio", fetch = FetchType.LAZY)
+    private WorkImage workImage;
 
     @Builder
     public Portfolio(User user, String gender, String phoneNumber, String workplace,
