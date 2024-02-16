@@ -43,4 +43,8 @@ public enum HairName {
         log.info("없음");
         return null;
     }
+
+    public String getValue() {
+        return value;
+    }
 }

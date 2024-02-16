@@ -10,5 +10,6 @@ public interface HairStyleRepository extends JpaRepository<HairStyle, Long> {
 
     Optional<HairStyle> findHairStyleByHairStyleId(Long id);
 
-    HairStyle findByHairName(HairName hairName2);
+    Optional<HairStyle> findByHairName(HairName hairName);
+
 }

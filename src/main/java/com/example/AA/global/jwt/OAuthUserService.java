@@ -153,20 +153,30 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
                     .imageUrl4(portfolioReqDto.getImageUrl4())
                     .build();
 
-
+            // 포트폴리오 저장
+            portfolioRepository.save(portfolio);
 
             // Save PortfolioHairStyles
             List<PortfolioHairStyle> portfolioHairStyles = new ArrayList<>();
+           
 
             // HairName1에 해당하는 HairStyle 찾기
             HairName hairName1 = HairName.containsTitle(portfolioReqDto.getHairName1());
+
+
+            log.info("hairName1: {}", hairName1); //null이 아닌 값으로 잘 들어옴 ex)BOB_CUT
+
             if (hairName1 != null) {
-                HairStyle hairStyle1 = hairStyleRepository.findByHairName(hairName1);
-                if (hairStyle1 != null) {
+
+                Optional<HairStyle> hairStyle1 = hairStyleRepository.findByHairName(hairName1);
+
+                System.out.println("HairStyle1: " + hairStyle1);
+
+                if (hairStyle1.isPresent()) {
                     PortfolioHairStyle portfolioHairStyle1 = PortfolioHairStyle.builder()
-                            .portfolio(portfolio)
-                            .hairStyle(hairStyle1)
-                            .build();
+                        .portfolio(portfolio)
+                        .hairStyle(hairStyle1.get())
+                        .build();
                     portfolioHairStyles.add(portfolioHairStyle1);
                 }
             }
@@ -174,12 +184,12 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
             // HairName2에 해당하는 HairStyle 찾기
             HairName hairName2 = HairName.containsTitle(portfolioReqDto.getHairName2());
             if (hairName2 != null) {
-                HairStyle hairStyle2 = hairStyleRepository.findByHairName(hairName2);
-                if (hairStyle2 != null) {
+                Optional<HairStyle> hairStyle2 = hairStyleRepository.findByHairName(hairName2);
+                if (hairStyle2.isPresent()) {
                     PortfolioHairStyle portfolioHairStyle2 = PortfolioHairStyle.builder()
-                            .portfolio(portfolio)
-                            .hairStyle(hairStyle2)
-                            .build();
+                        .portfolio(portfolio)
+                        .hairStyle(hairStyle2.get())
+                        .build();
                     portfolioHairStyles.add(portfolioHairStyle2);
                 }
             }
@@ -187,27 +197,31 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
             // HairName3에 해당하는 HairStyle 찾기
             HairName hairName3 = HairName.containsTitle(portfolioReqDto.getHairName3());
             if (hairName3 != null) {
-                HairStyle hairStyle3 = hairStyleRepository.findByHairName(hairName3);
-                if (hairStyle3 != null) {
+                Optional<HairStyle> hairStyle3 = hairStyleRepository.findByHairName(hairName3);
+                if (hairStyle3.isPresent()) {
                     PortfolioHairStyle portfolioHairStyle3 = PortfolioHairStyle.builder()
-                            .portfolio(portfolio)
-                            .hairStyle(hairStyle3)
-                            .build();
+                        .portfolio(portfolio)
+                        .hairStyle(hairStyle3.get())
+                        .build();
                     portfolioHairStyles.add(portfolioHairStyle3);
                 }
+            }
+
+            //list에 헤어스타일 잘 들어갔는지 확인
+            if (portfolioHairStyles.isEmpty()) {
+                System.out.println("portfolioHairStyles 리스트가 비어있습니다.");
+            } else {
+                System.out.println("portfolioHairStyles 리스트에는 " + portfolioHairStyles.size() + " 개의 항목이 있습니다.");
             }
 
 
             // Save PortfolioHairStyles
             portfolioHairStyles.forEach(portfolioHairStyleRepository::save);
 
-
-
             // 포트폴리오 저장
             portfolioRepository.save(portfolio);
             workImageRepository.save(workImage);
-
-
+            
             // 저장된 포트폴리오 정보를 조회하여 PortfolioResDto 객체 생성
             Portfolio savedPortfolio = portfolioRepository.findPortfolioByUser(user);
             log.info(String.valueOf(savedPortfolio));

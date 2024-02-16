@@ -5,7 +5,10 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,9 +38,14 @@ public class PortfolioResDto {
     public PortfolioResDto(Portfolio portfolio) {
         WorkImage workImage = portfolio.getWorkImage();
         List<PortfolioHairStyle> portfolioHairStyles = portfolio.getPortfolioHairStyles();
-        List<HairStyle> hairStyles = portfolioHairStyles.stream()
-                .map(PortfolioHairStyle::getHairStyle)
-                .collect(Collectors.toList());
+        // List<HairStyle> hairStyles = portfolioHairStyles.stream() //여기서 null이 받아짐
+        //     .map(PortfolioHairStyle::getHairStyle)
+        //     .collect(Collectors.toList());
+        List<HairStyle> hairStyles = new ArrayList<>();
+        System.out.println("PortfolioHairStyle: " + portfolioHairStyles); //왜 null??
+        for (PortfolioHairStyle portfolioHairStyle : portfolioHairStyles) {
+            hairStyles.add(portfolioHairStyle.getHairStyle());
+        }
 
 
         this.user = portfolio.getUser();
@@ -49,10 +57,12 @@ public class PortfolioResDto {
         this.introduction = portfolio.getIntroduction();
         this.likesCount = portfolio.getLikesCount();
         this.profileURL = portfolio.getProfileURL();
-        this.imageUrl1 = workImage.getImageUrl1();
-        this.imageUrl2 = workImage.getImageUrl2();
-        this.imageUrl3 = workImage.getImageUrl3();
-        this.imageUrl4 = workImage.getImageUrl4();
+        if (workImage != null) {
+            this.imageUrl1 = workImage.getImageUrl1();
+            this.imageUrl2 = workImage.getImageUrl2();
+            this.imageUrl3 = workImage.getImageUrl3();
+            this.imageUrl4 = workImage.getImageUrl4();
+        }
         this.hairStyle1 = String.valueOf(hairStyles.get(0).getHairName());
         this.hairStyle2 = String.valueOf(hairStyles.get(1).getHairName());
         this.hairStyle3 = String.valueOf(hairStyles.get(2).getHairName());

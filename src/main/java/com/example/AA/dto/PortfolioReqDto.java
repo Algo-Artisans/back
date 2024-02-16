@@ -2,10 +2,12 @@ package com.example.AA.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class PortfolioReqDto {
     private String gender;
     private String phoneNumber;
