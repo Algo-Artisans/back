@@ -3,6 +3,7 @@ package com.example.AA.global.jwt;
 import com.example.AA.dto.*;
 import com.example.AA.entity.*;
 import com.example.AA.entity.enumtype.FaceShape;
+import com.example.AA.entity.enumtype.HairName;
 import com.example.AA.entity.enumtype.Role;
 import com.example.AA.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -152,23 +153,54 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
                     .imageUrl4(portfolioReqDto.getImageUrl4())
                     .build();
 
-            // Save HairStyles
-            List<HairStyle> hairStyles = new ArrayList<>();
-            for (String hairName : Arrays.asList(portfolioReqDto.getHairName1(), portfolioReqDto.getHairName2(), portfolioReqDto.getHairName3())) {
 
-                HairStyle hairStyle = HairStyle.builder()
-                        //.faceShape()
-                        .hairName(hairName)
-                        .build();
-                hairStyles.add(hairStyle);
-                hairStyleRepository.save(hairStyle);
-            }
 
             // Save PortfolioHairStyles
-            for (HairStyle hairStyle : hairStyles) {
-                PortfolioHairStyle portfolioHairStyle = new PortfolioHairStyle(portfolio, hairStyle);
-                portfolioHairStyleRepository.save(portfolioHairStyle);
+            List<PortfolioHairStyle> portfolioHairStyles = new ArrayList<>();
+
+            // HairName1에 해당하는 HairStyle 찾기
+            HairName hairName1 = HairName.containsTitle(portfolioReqDto.getHairName1());
+            if (hairName1 != null) {
+                HairStyle hairStyle1 = hairStyleRepository.findByHairName(hairName1);
+                if (hairStyle1 != null) {
+                    PortfolioHairStyle portfolioHairStyle1 = PortfolioHairStyle.builder()
+                            .portfolio(portfolio)
+                            .hairStyle(hairStyle1)
+                            .build();
+                    portfolioHairStyles.add(portfolioHairStyle1);
+                }
             }
+
+            // HairName2에 해당하는 HairStyle 찾기
+            HairName hairName2 = HairName.containsTitle(portfolioReqDto.getHairName2());
+            if (hairName2 != null) {
+                HairStyle hairStyle2 = hairStyleRepository.findByHairName(hairName2);
+                if (hairStyle2 != null) {
+                    PortfolioHairStyle portfolioHairStyle2 = PortfolioHairStyle.builder()
+                            .portfolio(portfolio)
+                            .hairStyle(hairStyle2)
+                            .build();
+                    portfolioHairStyles.add(portfolioHairStyle2);
+                }
+            }
+
+            // HairName3에 해당하는 HairStyle 찾기
+            HairName hairName3 = HairName.containsTitle(portfolioReqDto.getHairName3());
+            if (hairName3 != null) {
+                HairStyle hairStyle3 = hairStyleRepository.findByHairName(hairName3);
+                if (hairStyle3 != null) {
+                    PortfolioHairStyle portfolioHairStyle3 = PortfolioHairStyle.builder()
+                            .portfolio(portfolio)
+                            .hairStyle(hairStyle3)
+                            .build();
+                    portfolioHairStyles.add(portfolioHairStyle3);
+                }
+            }
+
+
+            // Save PortfolioHairStyles
+            portfolioHairStyles.forEach(portfolioHairStyleRepository::save);
+
 
 
             // 포트폴리오 저장
@@ -179,11 +211,11 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
             // 저장된 포트폴리오 정보를 조회하여 PortfolioResDto 객체 생성
             Portfolio savedPortfolio = portfolioRepository.findPortfolioByUser(user);
             log.info(String.valueOf(savedPortfolio));
-            // hairstyle 가져오는 코드
 
-            return PortfolioResDto.builder()
-                    .portfolio(savedPortfolio)
-                    .build();
+            PortfolioResDto portfolioResDto = new PortfolioResDto(portfolio);
+
+            return portfolioResDto;
+
         } else {
             throw new RuntimeException("디자이너가 아닌 사용자는 포트폴리오를 생성할 수 없습니다.");
         }

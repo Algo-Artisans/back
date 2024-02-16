@@ -30,16 +30,18 @@ public class PortfolioSearchRepository {
         QPortfolio portfolio = QPortfolio.portfolio;
         QPortfolioHairStyle qportfolioHairStyle = QPortfolioHairStyle.portfolioHairStyle;
         QWorkImage workImage = QWorkImage.workImage;
-        List<Long> hairStyleIdsByEnum = queryFactory.select(QHairStyle.hairStyle.hairStyleId).from(QHairStyle.hairStyle).where(QHairStyle.hairStyle.hairName.eq(hairName)).fetch();
+        // hairName을 가진 hairStyleId를 가져온다.
+        Long hairStyleIdByEnum = queryFactory.select(QHairStyle.hairStyle.hairStyleId).from(QHairStyle.hairStyle).where(QHairStyle.hairStyle.hairName.eq(hairName)).fetchOne();
 
-        // PortfolioHairStyles에서 portfolioId를 가져온다 찾는다.
+        // PortfolioHairStyles에서 portfolioId를 가져온다.
         List<Long> portfolioIds = queryFactory
                 .selectDistinct(qportfolioHairStyle.portfolio.portfolioId)
                 .from(qportfolioHairStyle)
-                .where(qportfolioHairStyle.hairStyle.hairStyleId.in(hairStyleIdsByEnum))
+                .where(qportfolioHairStyle.hairStyle.hairStyleId.in(hairStyleIdByEnum))
                 .fetch();
 
-        // in 절로 가져온 Portfolio의 id의 집합을 이용하여 Portfolio 객체를 가져온다. 이 때, hairstyleportfolio 테이블을 fetchjoin으로 가져온다.
+        // in 절로 가져온 Portfolio의 id의 집합을 이용하여 Portfolio 객체를 가져온다.
+        // 이 때, hairstyleportfolio 테이블을 fetchjoin으로 가져온다.
         List<Portfolio> portfolios = queryFactory
                 .selectFrom(portfolio)
                 .distinct()

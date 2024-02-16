@@ -26,7 +26,6 @@ public class PortfolioService {
     private final AdvertisementRepository advertisementRepository;
     private final PortfolioHairStyleRepository portfolioHairStyleRepository;
     private final WorkImageRepository workImageRepository;
-    private final HairStyleRepository hairStyleRepository;
 
     // 내 포트폴리오 조회
     public PortfolioResDto getPortfolio(HttpServletRequest httpRequest) {
@@ -44,12 +43,9 @@ public class PortfolioService {
 
     // 디자이너 포트폴리오 전체 조회
     public List<PortfolioResDto> getPortfolios(HttpServletRequest httpRequest) { // accesstoken
-        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
         List<Portfolio> portfolioList = portfolioRepository.findAll();
         List<PortfolioResDto> portfolioListResDto = new ArrayList<>();
         for (Portfolio portfolio : portfolioList) {
-            List<PortfolioHairStyle> portfolioHairStyles = portfolioHairStyleRepository.findPortfolioHairStyleByPortfolio(portfolio);
-
             PortfolioResDto portfolioResDto = PortfolioResDto.builder()
                     .portfolio(portfolio)
                     .build();
@@ -61,13 +57,10 @@ public class PortfolioService {
 
     // 디자이너 포트폴리오 키워드 필터링 + 헤어스타일링에 어울리는 디자이너 추천
     public List<PortfolioResDto> searchPortfolio(HttpServletRequest httpRequest, String s) {
-        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
         List<PortfolioResDto> portfolioListResDto = new ArrayList<>(); // 변수명 수정
-        log.info("searchPortfolio");
 
         HairName hairName = HairName.containsTitle(s);
         if (hairName != null) {
-            log.info("searchPortfolio containsTitle");
             portfolioListResDto = portfolioSearchRepository.searchHairname(hairName);
         }
 
@@ -83,8 +76,8 @@ public class PortfolioService {
 
     // 내 포트폴리오 삭제
     public void deletePortfolio(HttpServletRequest httpRequest) {
-        User user = jwtTokenProvider.getUserInfoByToken(httpRequest); // 토큰을 기반으로 사용자 정보 가져오기
-        Portfolio portfolio = portfolioRepository.findPortfolioByUser(user); // 사용자에게 연관된 포트폴리오 가져오기
+        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+        Portfolio portfolio = portfolioRepository.findPortfolioByUser(user);
 
         List<PortfolioHairStyle> portfolioHairStyles = portfolioHairStyleRepository.findByPortfolio(portfolio);
         for (PortfolioHairStyle portfolioHairStyle : portfolioHairStyles) {

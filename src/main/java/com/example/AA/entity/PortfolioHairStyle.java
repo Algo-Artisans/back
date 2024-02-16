@@ -2,6 +2,7 @@ package com.example.AA.entity;
 
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,6 +29,7 @@ public class PortfolioHairStyle {
     private HairStyle hairStyle; // 스트레이트, c컬단발, 보브컷
 
 
+    @Builder
     public PortfolioHairStyle(Portfolio portfolio, HairStyle hairStyle) {
         this.portfolio = portfolio;
         this.hairStyle = hairStyle;

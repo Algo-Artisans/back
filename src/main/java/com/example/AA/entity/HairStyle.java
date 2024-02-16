@@ -21,15 +21,15 @@ public class HairStyle {
 
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "face_shape_id",nullable = true)
-    private FaceShape faceShape; //ㅣlong
+    private FaceShape faceShape; // long
 
     @Enumerated(EnumType.STRING)
     @Column(name = "hair_name",nullable = true)
     private HairName hairName; // 스트레이트
 
     @Builder
-    public HairStyle(String hairName) {
-        //this.faceShape = faceShape;
+    public HairStyle(String faceShape, String hairName) {
+        this.faceShape = FaceShape.valueOf(faceShape);
         this.hairName = HairName.valueOf(hairName);
     }
 }
