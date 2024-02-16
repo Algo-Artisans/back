@@ -12,3 +12,4 @@ public interface WorkImageRepository extends JpaRepository<WorkImage, Long>{
 
     List<WorkImage> findByPortfolio(Portfolio portfolio);
 }
+//
