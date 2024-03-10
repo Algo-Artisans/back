@@ -4,6 +4,7 @@ package com.example.AA.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -58,11 +59,16 @@ public class Portfolio {
     @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
     private List<PortfolioHairStyle> portfolioHairStyles;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "is_advertise", nullable = true)
+    private Integer isAdvertise;
 
     @Builder
     public Portfolio(User user, String gender, String phoneNumber, String workplace,
                      String snsAddress, String introduction, int likesCount,
-                     String profileURL, String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4) {
+                     String profileURL, String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4, LocalDateTime createdAt,Integer isAdvertise) {
         this.user = user;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
@@ -75,6 +81,8 @@ public class Portfolio {
         this.imageUrl2 = imageUrl2;
         this.imageUrl3 = imageUrl3;
         this.imageUrl4 = imageUrl4;
+        this.createdAt = LocalDateTime.now();
+        this.isAdvertise = isAdvertise;
     }
 }
 

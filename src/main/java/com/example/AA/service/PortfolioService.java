@@ -7,11 +7,13 @@ import com.example.AA.global.jwt.JwtTokenProvider;
 import com.example.AA.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +25,6 @@ public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final PortfolioSearchRepository portfolioSearchRepository;
     private final LikeRepository likeRepository;
-    private final AdvertisementRepository advertisementRepository;
     private final PortfolioHairStyleRepository portfolioHairStyleRepository;
     private final HairStyleRepository hairStyleRepository;
 
@@ -57,13 +58,14 @@ public class PortfolioService {
                 .hairName1(hairStyle1.getHairName())
                 .hairName2(hairStyle2.getHairName())
                 .hairName3(hairStyle3.getHairName())
+                .isAdvertise(portfolio.getIsAdvertise())
                 .build();
     }
 
 
 
     // 디자이너 포트폴리오 전체 조회
-    public List<PortfolioResDto> getPortfolios(HttpServletRequest httpRequest) { // accesstoken
+    public List<PortfolioResDto> getPortfolios(HttpServletRequest httpRequest) {
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
         List<Portfolio> portfolioList = portfolioRepository.findAll();
         List<PortfolioResDto> portfolioListResDto = new ArrayList<>();
@@ -92,6 +94,7 @@ public class PortfolioService {
                     .hairName1(hairStyle1.getHairName())
                     .hairName2(hairStyle2.getHairName())
                     .hairName3(hairStyle3.getHairName())
+                    .isAdvertise(portfolio.getIsAdvertise())
                     .build();
             portfolioListResDto.add(portfolioResDto);
         }
@@ -127,7 +130,8 @@ public class PortfolioService {
                         portfolio.getImageUrl4(),
                         portfolio.getPortfolioHairStyles().get(0).getHairStyle().getHairName(),
                         portfolio.getPortfolioHairStyles().get(1).getHairStyle().getHairName(),
-                        portfolio.getPortfolioHairStyles().get(2).getHairStyle().getHairName()
+                        portfolio.getPortfolioHairStyles().get(2).getHairStyle().getHairName(),
+                        portfolio.getIsAdvertise()
                 ));
             }
         }
@@ -139,9 +143,99 @@ public class PortfolioService {
 
 
     // 디자이너 포트폴리오 드롭다운 조회
-//    public PortfolioDropDownResDto dropdownPortfolio(HttpServletRequest httpRequest, String s) {
-//        return PortfolioDropDownResDto;
-//    }
+    public List<PortfolioResDto> dropdownPortfolio(HttpServletRequest httpRequest, String s) {
+        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+        List<PortfolioResDto> portfolioListResDto = new ArrayList<>();
+        List<Portfolio> portfolioList = portfolioRepository.findAll();
+        log.info(portfolioList.toString());
+
+        // 최신순
+        if (s.equals("최신순")) {
+            log.info("최신순");
+            List<Portfolio> timeSortedPortfolioList = new ArrayList<>(portfolioList);
+            timeSortedPortfolioList.sort(Comparator.comparing(Portfolio::getCreatedAt).reversed());
+            log.info(timeSortedPortfolioList.toString());
+
+            for (Portfolio portfolio : timeSortedPortfolioList) {
+                portfolioListResDto.add(new PortfolioResDto(
+                        portfolio.getUser(),
+                        portfolio.getPortfolioId(),
+                        portfolio.getGender(),
+                        portfolio.getPhoneNumber(),
+                        portfolio.getWorkplace(),
+                        portfolio.getSnsAddress(),
+                        portfolio.getIntroduction(),
+                        portfolio.getLikesCount(),
+                        portfolio.getProfileURL(),
+                        portfolio.getImageUrl1(),
+                        portfolio.getImageUrl2(),
+                        portfolio.getImageUrl3(),
+                        portfolio.getImageUrl4(),
+                        portfolio.getPortfolioHairStyles().get(0).getHairStyle().getHairName(),
+                        portfolio.getPortfolioHairStyles().get(1).getHairStyle().getHairName(),
+                        portfolio.getPortfolioHairStyles().get(2).getHairStyle().getHairName(),
+                        portfolio.getIsAdvertise()
+                ));
+            }
+        }
+        // 광고순
+        if (s.equals("광고순")) {
+            log.info("광고순");
+            List<Portfolio> advertisementSortedPortfolioList = portfolioRepository.findByIsAdvertise(1);
+            log.info(advertisementSortedPortfolioList.toString());
+            for (Portfolio portfolio : advertisementSortedPortfolioList) {
+                portfolioListResDto.add(new PortfolioResDto(
+                        portfolio.getUser(),
+                        portfolio.getPortfolioId(),
+                        portfolio.getGender(),
+                        portfolio.getPhoneNumber(),
+                        portfolio.getWorkplace(),
+                        portfolio.getSnsAddress(),
+                        portfolio.getIntroduction(),
+                        portfolio.getLikesCount(),
+                        portfolio.getProfileURL(),
+                        portfolio.getImageUrl1(),
+                        portfolio.getImageUrl2(),
+                        portfolio.getImageUrl3(),
+                        portfolio.getImageUrl4(),
+                        portfolio.getPortfolioHairStyles().get(0).getHairStyle().getHairName(),
+                        portfolio.getPortfolioHairStyles().get(1).getHairStyle().getHairName(),
+                        portfolio.getPortfolioHairStyles().get(2).getHairStyle().getHairName(),
+                        portfolio.getIsAdvertise()
+                ));
+            }
+        }
+        // 좋아요순
+        if (s.equals("좋아요순")) {
+            log.info("좋아요순");
+            List<Portfolio> likeSortedPortfolioList = portfolioList.stream()
+                    .sorted(Comparator.comparingInt(Portfolio::getLikesCount).reversed())
+                    .collect(Collectors.toList());
+            log.info(likeSortedPortfolioList.toString());
+            for (Portfolio portfolio : likeSortedPortfolioList) {
+                portfolioListResDto.add(new PortfolioResDto(
+                        portfolio.getUser(),
+                        portfolio.getPortfolioId(),
+                        portfolio.getGender(),
+                        portfolio.getPhoneNumber(),
+                        portfolio.getWorkplace(),
+                        portfolio.getSnsAddress(),
+                        portfolio.getIntroduction(),
+                        portfolio.getLikesCount(),
+                        portfolio.getProfileURL(),
+                        portfolio.getImageUrl1(),
+                        portfolio.getImageUrl2(),
+                        portfolio.getImageUrl3(),
+                        portfolio.getImageUrl4(),
+                        portfolio.getPortfolioHairStyles().get(0).getHairStyle().getHairName(),
+                        portfolio.getPortfolioHairStyles().get(1).getHairStyle().getHairName(),
+                        portfolio.getPortfolioHairStyles().get(2).getHairStyle().getHairName(),
+                        portfolio.getIsAdvertise()
+                ));
+            }
+        }
+        return portfolioListResDto;
+    }
 
 
     // 내 포트폴리오 삭제
@@ -180,34 +274,24 @@ public class PortfolioService {
 
 
     // 내 광고 등록
-    public AdvertisementResDto createAdvertisement(HttpServletRequest httpRequest, AdvertisementReqDto advertisementReqDto) {
-        User user = jwtTokenProvider.getUserInfoByToken(httpRequest); // 현재 사용자 정보 가져오기
-        Portfolio portfolio = portfolioRepository.findPortfolioByUser(user); // 사용자의 포트폴리오 가져오기
+    public Integer createAdvertisement(HttpServletRequest httpRequest) {
+        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+        Portfolio portfolio = portfolioRepository.findPortfolioByUser(user);
 
-        // Advertisement 엔티티 생성 및 저장
-        Advertisement advertisement = Advertisement.builder()
-                .portfolio(portfolio)
-                .applied(true) // 광고 신청 여부를 true로 설정
-                .build();
-        advertisementRepository.save(advertisement);
-
-        // 광고 등록 결과 반환
-        return AdvertisementResDto.builder()
-                .advertisementId(advertisement.getAdvertisementId())
-                .portfolio(portfolio)
-                .applied(true)
-                .build();
+        portfolio.setIsAdvertise(1);
+        portfolioRepository.save(portfolio);
+        return 1;
     }
 
     // 내 광고 삭제
-    public void deleteAdvertisement(HttpServletRequest httpRequest) {
-        User user = jwtTokenProvider.getUserInfoByToken(httpRequest); // 현재 사용자 정보 가져오기
-        Portfolio portfolio = portfolioRepository.findPortfolioByUser(user); // 사용자의 포트폴리오 가져오기
-        Advertisement advertisement = advertisementRepository.findByPortfolio(portfolio); // 사용자의 포트폴리오에 해당하는 광고 가져오기
+    public Integer deleteAdvertisement(HttpServletRequest httpRequest) {
+        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+        Portfolio portfolio = portfolioRepository.findPortfolioByUser(user);
 
-        if (advertisement != null) {
-            advertisementRepository.delete(advertisement); // 광고 삭제
-        }
+        portfolio.setIsAdvertise(0);
+        portfolioRepository.save(portfolio);
+
+        return 0;
     }
 
 

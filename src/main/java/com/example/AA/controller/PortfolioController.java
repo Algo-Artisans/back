@@ -22,6 +22,7 @@ public class PortfolioController {
     private final PortfolioService portfolioService;
 
 
+    // http://localhost:8080/api/v1/myPortfolio
     @Operation(summary = "내 포트폴리오 등록")
     @PostMapping("/myPortfolio")
     public ResponseEntity<PortfolioResDto> postPortfolio(HttpServletRequest httpRequest, @RequestBody PortfolioReqDto portfolioReqDto) {
@@ -43,6 +44,7 @@ public class PortfolioController {
     }
 
 
+    // http://localhost:8080/api/v1/search/portfolios?hairstyle=단발 C컬펌
     @Operation(summary = "디자이너 포트폴리오 키워드 필터링")
     @GetMapping("/search/portfolios")
     public ResponseEntity<List<PortfolioResDto>> searchPortfolio(HttpServletRequest httpRequest,@RequestParam(name = "hairstyle") String s){
@@ -50,11 +52,12 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioService.searchPortfolio(httpRequest,s));
     }
 
-    //@Operation(summary = "디자이너 포트폴리오 드롭다운 조회")
-//    @GetMapping("/dropdown/portfilios")
-//    public ResponseEntity<PortfolioDropDownResDto> dropdownPortfolio(HttpServletRequest httpRequest,@RequestParam(name = "dropdown") String s){
-//        return ResponseEntity.ok(portfolioService.dropdownPortfolio(httpRequest,s));
-//    }
+    // http://localhost:8080/api/v1/dropdown/portfolios?dropdown=최신순
+    @Operation(summary = "디자이너 포트폴리오 드롭다운 조회")
+    @GetMapping("/dropdown/portfolios")
+    public ResponseEntity<List<PortfolioResDto>> dropdownPortfolio(HttpServletRequest httpRequest,@RequestParam(name = "dropdown") String s){
+        return ResponseEntity.ok(portfolioService.dropdownPortfolio(httpRequest,s));
+    }
 
     @Operation(summary = "내 포트폴리오 삭제")
     @DeleteMapping("/myPortfolio")
@@ -71,14 +74,14 @@ public class PortfolioController {
 
     @Operation(summary = "내 광고 등록")
     @PostMapping("/myAdvertisement")
-    public ResponseEntity<AdvertisementResDto> postAdvertisement(HttpServletRequest httpRequest, @RequestBody AdvertisementReqDto advertisementReqDto) {
-        return ResponseEntity.ok(portfolioService.createAdvertisement(httpRequest, advertisementReqDto));
+    public ResponseEntity<Integer> postAdvertisement(HttpServletRequest httpRequest) {
+        return ResponseEntity.ok(portfolioService.createAdvertisement(httpRequest));
     }
 
     @Operation(summary = "내 광고 삭제")
     @DeleteMapping("/myAdvertisement")
-    public ResponseEntity<?> deleteAdvertisement(HttpServletRequest httpRequest) {
+    public ResponseEntity<Integer> deleteAdvertisement(HttpServletRequest httpRequest) {
         portfolioService.deleteAdvertisement(httpRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(portfolioService.deleteAdvertisement(httpRequest));
     }
 }
