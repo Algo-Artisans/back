@@ -73,9 +73,14 @@ public class SecurityConfig {
                         /* swagger v3 */
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
+                        "/v2/api-docs",
+                        "/swagger-resources",
+                        "/swagger-resources/**",
+                        "/configuration/ui",
+                        "/configuration/security",
                         "/swagger-ui.html",
                         "/webjars/**",
-                        "/swagger-resources/**","/", "/css/**", "/images/**", //resource/static을 기본경로로 자원에 url로 접근할 수 있다.
+                        "**/oath-processor/**","/", "/css/**", "/images/**", //resource/static을 기본경로로 자원에 url로 접근할 수 있다.
                         "/js/**", "/h2/**", "/select-role", "/receiveImage", "/file/**", "/api/v1/**"
                 ).permitAll()
 //                .antMatchers("/api/v1/**").hasRole(Role.

@@ -45,7 +45,7 @@ public class PortfolioController {
 
 
     // http://localhost:8080/api/v1/search/portfolios?hairstyle=단발 C컬펌
-    @Operation(summary = "디자이너 포트폴리오 키워드 필터링")
+    @Operation(summary = "디자이너 포트폴리오 키워드 검색, 헤어스타일링에 어울리는 디자이너 추천")
     @GetMapping("/search/portfolios")
     public ResponseEntity<List<PortfolioResDto>> searchPortfolio(HttpServletRequest httpRequest,@RequestParam(name = "hairstyle") String s){
         log.info("searchPortfolio");
@@ -58,6 +58,7 @@ public class PortfolioController {
     public ResponseEntity<List<PortfolioResDto>> dropdownPortfolio(HttpServletRequest httpRequest,@RequestParam(name = "dropdown") String s){
         return ResponseEntity.ok(portfolioService.dropdownPortfolio(httpRequest,s));
     }
+
 
     @Operation(summary = "내 포트폴리오 삭제")
     @DeleteMapping("/myPortfolio")

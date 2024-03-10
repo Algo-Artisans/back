@@ -32,21 +32,14 @@ public class UserController {
         return new FaceShapeResDto(faceShapeReqDto.getFaceShapeBest(), faceShapeReqDto.getFaceShapeWorst());
     }
 
-    // 헤어스타일링에 어울리는 디자이너 추천
-//    @GetMapping("/recommend/hairstylists")
-//    public ResponseEntity<List<PortfolioResDto>> recommendHairStylists(HttpServletRequest httpRequest, @RequestParam(name = "hairstyle") String s){
-//        return ResponseEntity.ok(portfolioService.searchPortfolio(httpRequest,s));
-//    }
-
-
     @Operation(summary = "디자이너 좋아요")
-    @PostMapping("/Like/hairstylist")
+    @PostMapping("/like/hairstylist")
     public ResponseEntity<LikeResDto> likeHairstylist(HttpServletRequest httpRequest, @RequestBody LikeReqDto likeReqDto) {
         return ResponseEntity.ok(portfolioService.likeHairstylist(httpRequest,likeReqDto));
     }
 
     @Operation(summary = "내가 누른 디자이너 좋아요 확인")
-    @GetMapping("/Like/hairstylists")
+    @GetMapping("/like/hairstylists")
     public ResponseEntity<List<LikeResDto>> getLikeHairstylists(HttpServletRequest httpRequest) {
         return ResponseEntity.ok(portfolioService.getLikeHairstylists(httpRequest));
     }
