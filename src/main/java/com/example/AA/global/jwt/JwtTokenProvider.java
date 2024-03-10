@@ -1,7 +1,7 @@
 package com.example.AA.global.jwt;
 
 import com.example.AA.dto.OAuthUserResDto;
-import com.example.AA.global.redis.RedisService;
+//import com.example.AA.global.redis.RedisService;
 import com.example.AA.entity.User;
 import com.example.AA.repository.UserRepository;
 import io.jsonwebtoken.*;
@@ -24,7 +24,7 @@ public class JwtTokenProvider {
 
 
     private final UserRepository userRepository;
-    private final RedisService redisService;
+    //private final RedisService redisService;
 
     @Value("${spring.jwt.secretKey}")
     private String SECRET_KEY;
@@ -52,7 +52,7 @@ public class JwtTokenProvider {
         Long tokenInvalidTime = 1000L * 60 * 60 * 24; // 1d
         String refreshToken = this.createToken(userPK, roles, tokenInvalidTime);
         //refresh token은 redis에 저장
-        redisService.setValues(userPK, refreshToken, Duration.ofMillis(tokenInvalidTime));
+        //redisService.setValues(userPK, refreshToken, Duration.ofMillis(tokenInvalidTime));
         return refreshToken;
     }
 
@@ -132,12 +132,12 @@ public class JwtTokenProvider {
 
 
 
-    public void checkRefreshToken(String userId, String refreshToken) {
-        String redisRT = redisService.getValues(userId);
-        if (!refreshToken.equals(redisRT)) {
-            //throw new RefreshTokenExpiredException();
-        }
-    }
+//    public void checkRefreshToken(String userId, String refreshToken) {
+//        //String redisRT = redisService.getValues(userId);
+//        if (!refreshToken.equals(redisRT)) {
+//            //throw new RefreshTokenExpiredException();
+//        }
+//    }
 
     // access 토큰 만료시간을 체크 후, redis에 (blacklist) + accessToken, 계정, 만료기간을이 담긴
     // ValueOperation을 만들어 redis에 저장한다.
@@ -145,7 +145,7 @@ public class JwtTokenProvider {
     public void logout(String userId, String accessToken) {
         Date expiration = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody().getExpiration();
         long expiredAccessTokenTime = expiration.getTime() - new Date().getTime();
-        redisService.setValues(blackListATPrefix + accessToken, userId, Duration.ofMillis(expiredAccessTokenTime));
-        redisService.deleteValues(userId);
+        //redisService.setValues(blackListATPrefix + accessToken, userId, Duration.ofMillis(expiredAccessTokenTime));
+        //redisService.deleteValues(userId);
     }
 }

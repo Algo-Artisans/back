@@ -3,6 +3,7 @@ package com.example.AA.global.jwt;
 import com.example.AA.dto.*;
 import com.example.AA.entity.*;
 import com.example.AA.entity.enumtype.FaceShape;
+import com.example.AA.entity.enumtype.HairName;
 import com.example.AA.entity.enumtype.Role;
 import com.example.AA.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,6 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
     private final HttpSession httpSession;
     private final JwtTokenProvider jwtTokenProvider;
     private final PortfolioRepository portfolioRepository;
-    private final WorkImageRepository workImageRepository;
     private final HairStyleRepository hairStyleRepository;
     private final PortfolioHairStyleRepository portfolioHairStyleRepository;
     //회원가입 처리
@@ -106,7 +106,7 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
             for (FaceShape value : FaceShape.values()) {
                 if (value.getValue().equalsIgnoreCase(faceShapeReqDto.getFaceShapeBest())) {
                     User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
-                    user.updateFaceShapeBest(value);
+                    user.updateFaceShapeBest(String.valueOf(value));
                     userRepository.save(user);
                     return;  // 업데이트 후 종료
                 }
@@ -114,7 +114,7 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
             for (FaceShape value : FaceShape.values()) {
                 if (value.getValue().equalsIgnoreCase(faceShapeReqDto.getFaceShapeWorst())) {
                     User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
-                    user.updateFaceShapeWorst(value);
+                    user.updateFaceShapeWorst(String.valueOf(value));
                     userRepository.save(user);
                     return;  // 업데이트 후 종료
                 }
@@ -142,64 +142,81 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
                     .introduction(portfolioReqDto.getIntroduction())
                     .likesCount(portfolioReqDto.getLikesCount())
                     .profileURL(portfolioReqDto.getProfileURL())
-                    .build();
-
-            WorkImage workImage = WorkImage.builder()
-                    .portfolio(portfolio)
                     .imageUrl1(portfolioReqDto.getImageUrl1())
                     .imageUrl2(portfolioReqDto.getImageUrl2())
                     .imageUrl3(portfolioReqDto.getImageUrl3())
                     .imageUrl4(portfolioReqDto.getImageUrl4())
                     .build();
 
-            // Save HairStyles
-            List<HairStyle> hairStyles = new ArrayList<>();
-            for (String hairName : Arrays.asList(portfolioReqDto.getHairName1(), portfolioReqDto.getHairName2(), portfolioReqDto.getHairName3())) {
 
-                HairStyle hairStyle = HairStyle.builder()
-                        //.faceShape()
-                        .hairName(hairName)
-                        .build();
-                hairStyles.add(hairStyle);
-                hairStyleRepository.save(hairStyle);
-            }
 
             // Save PortfolioHairStyles
-            for (HairStyle hairStyle : hairStyles) {
-                PortfolioHairStyle portfolioHairStyle = new PortfolioHairStyle(portfolio, hairStyle);
-                portfolioHairStyleRepository.save(portfolioHairStyle);
+            List<PortfolioHairStyle> portfolioHairStyles = new ArrayList<>();
+
+            // HairName1에 해당하는 HairStyle 찾기
+            HairStyle hairStyle1 = hairStyleRepository.findByHairName(portfolioReqDto.getHairName1());
+            if (hairStyle1 != null) {
+                PortfolioHairStyle portfolioHairStyle1 = PortfolioHairStyle.builder()
+                        .portfolio(portfolio)
+                        .hairStyle(hairStyle1)
+                        .build();
+                portfolioHairStyles.add(portfolioHairStyle1);
             }
 
 
-            // 포트폴리오 저장
+            HairStyle hairStyle2 = hairStyleRepository.findByHairName(portfolioReqDto.getHairName2());;
+            if (hairStyle2 != null) {
+                PortfolioHairStyle portfolioHairStyle2 = PortfolioHairStyle.builder()
+                        .portfolio(portfolio)
+                        .hairStyle(hairStyle2)
+                        .build();
+                portfolioHairStyles.add(portfolioHairStyle2);
+            }
+
+
+            // HairName3에 해당하는 HairStyle 찾기
+            HairStyle hairStyle3 = hairStyleRepository.findByHairName(portfolioReqDto.getHairName3());;
+            if (hairStyle3 != null) {
+                PortfolioHairStyle portfolioHairStyle3 = PortfolioHairStyle.builder()
+                        .portfolio(portfolio)
+                        .hairStyle(hairStyle3)
+                        .build();
+                portfolioHairStyles.add(portfolioHairStyle3);
+            }
+
+
+            // PortfolioHairStyles 저장
+            portfolioHairStyles.forEach(portfolioHairStyleRepository::save);
+
+
+            // Portfolio 저장
             portfolioRepository.save(portfolio);
-            workImageRepository.save(workImage);
 
 
             // 저장된 포트폴리오 정보를 조회하여 PortfolioResDto 객체 생성
             Portfolio savedPortfolio = portfolioRepository.findPortfolioByUser(user);
-            WorkImage savedWorkImage = workImageRepository.findWorkImageByPortfolio(portfolio)
-                    .orElseThrow(() -> new RuntimeException("작업물을 찾을 수 없습니다."));
+            log.info(String.valueOf(savedPortfolio));
 
-            List<PortfolioHairStyle> portfolioHairStyles = portfolioHairStyleRepository.findPortfolioHairStyleByPortfolio(portfolio);
-
-            HairStyle hairStyle1 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(0).getHairStyle().getHairStyleId())
-                    .orElseThrow(() -> new RuntimeException(""));
-            HairStyle hairStyle2 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(1).getHairStyle().getHairStyleId())
-                    .orElseThrow(() -> new RuntimeException(""));
-            HairStyle hairStyle3 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(2).getHairStyle().getHairStyleId())
-                    .orElseThrow(() -> new RuntimeException(""));
-            
-            // hairstyle 가져오는 코드
-
-            return PortfolioResDto.builder()
+            PortfolioResDto portfolioResDto = PortfolioResDto.builder()
                     .user(user)
-                    .portfolio(savedPortfolio)
-                    .workImage(savedWorkImage)
-                    .hairStyle1(hairStyle1)
-                    .hairStyle2(hairStyle2)
-                    .hairStyle3(hairStyle3)
+                    .gender(portfolioReqDto.getGender())
+                    .phoneNumber(portfolioReqDto.getPhoneNumber())
+                    .workplace(portfolioReqDto.getWorkplace())
+                    .snsAddress(portfolioReqDto.getSnsAddress())
+                    .introduction(portfolioReqDto.getIntroduction())
+                    .likesCount(portfolioReqDto.getLikesCount())
+                    .profileURL(portfolioReqDto.getProfileURL())
+                    .imageUrl1(portfolioReqDto.getImageUrl1())
+                    .imageUrl2(portfolioReqDto.getImageUrl2())
+                    .imageUrl3(portfolioReqDto.getImageUrl3())
+                    .imageUrl4(portfolioReqDto.getImageUrl4())
+                    .hairName1(portfolioReqDto.getHairName1())
+                    .hairName2(portfolioReqDto.getHairName2())
+                    .hairName3(portfolioReqDto.getHairName3())
                     .build();
+
+            return portfolioResDto;
+
         } else {
             throw new RuntimeException("디자이너가 아닌 사용자는 포트폴리오를 생성할 수 없습니다.");
         }

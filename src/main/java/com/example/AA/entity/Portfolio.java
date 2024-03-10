@@ -23,10 +23,10 @@ public class Portfolio {
     private User user; // 01
 
     @Column
-    private String gender; //
+    private String gender;
 
     @Column(name = "phone_number")
-    private String phoneNumber; //
+    private String phoneNumber;
 
     @Column
     private String workplace;
@@ -43,16 +43,26 @@ public class Portfolio {
     @Column(name = "profile_url")
     private String profileURL;
 
+    @Column(name = "image_url_1", nullable = true)
+    private String imageUrl1;
+
+    @Column(name = "image_url_2", nullable = true)
+    private String imageUrl2;
+
+    @Column(name = "image_url_3", nullable = true)
+    private String imageUrl3;
+
+    @Column(name = "image_url_4", nullable = true)
+    private String imageUrl4;
+
     @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
     private List<PortfolioHairStyle> portfolioHairStyles;
 
-    @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
-    private List<WorkImage> workImages;
 
     @Builder
     public Portfolio(User user, String gender, String phoneNumber, String workplace,
                      String snsAddress, String introduction, int likesCount,
-                     String profileURL) {
+                     String profileURL, String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4) {
         this.user = user;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
@@ -61,6 +71,10 @@ public class Portfolio {
         this.introduction = introduction;
         this.likesCount = likesCount;
         this.profileURL = profileURL;
+        this.imageUrl1 = imageUrl1;
+        this.imageUrl2 = imageUrl2;
+        this.imageUrl3 = imageUrl3;
+        this.imageUrl4 = imageUrl4;
     }
 }
 

@@ -19,17 +19,16 @@ public class HairStyle {
     @Column(name = "hair_style_id")
     private Long hairStyleId; // 1
 
-    @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "face_shape_id",nullable = true)
-    private FaceShape faceShape; //ㅣlong
+    @JoinColumn(name = "face_shape",nullable = true)
+    private String faceShape;
 
     @Column(name = "hair_name",nullable = true)
-    private HairName hairName; // 스트레이트
+    private String hairName; // 스트레이트
 
     @Builder
-    public HairStyle(String hairName) {
-        //this.faceShape = faceShape;
-        this.hairName = HairName.valueOf(hairName);
+    public HairStyle(String faceShape, String hairName) {
+        this.faceShape = faceShape;
+        this.hairName = hairName;
     }
 }
 
