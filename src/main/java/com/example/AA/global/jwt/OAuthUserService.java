@@ -146,6 +146,7 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
                     .imageUrl2(portfolioReqDto.getImageUrl2())
                     .imageUrl3(portfolioReqDto.getImageUrl3())
                     .imageUrl4(portfolioReqDto.getImageUrl4())
+                    .isAdvertise(0)
                     .build();
 
 
@@ -213,6 +214,7 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
                     .hairName1(portfolioReqDto.getHairName1())
                     .hairName2(portfolioReqDto.getHairName2())
                     .hairName3(portfolioReqDto.getHairName3())
+                    .isAdvertise(portfolio.getIsAdvertise())
                     .build();
 
             return portfolioResDto;

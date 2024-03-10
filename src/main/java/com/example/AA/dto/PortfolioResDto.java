@@ -27,6 +27,7 @@ public class PortfolioResDto {
     private String hairName1;
     private String hairName2;
     private String hairName3;
+    private int isAdvertise;
 
 
     @Builder
@@ -34,7 +35,7 @@ public class PortfolioResDto {
     public PortfolioResDto(User user, Long portfolioId, String gender, String phoneNumber, String workplace,
                            String snsAddress, String introduction, int likesCount, String profileURL,
                            String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4,
-                           String hairName1, String hairName2, String hairName3) {
+                           String hairName1, String hairName2, String hairName3, int isAdvertise) {
         this.user = user;
         this.portfolioId = portfolioId;
         this.gender = gender;
@@ -51,6 +52,7 @@ public class PortfolioResDto {
         this.hairName1 = hairName1;
         this.hairName2 = hairName2;
         this.hairName3 = hairName3;
+        this.isAdvertise = isAdvertise;
     }
 
 }

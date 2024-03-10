@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 
 // 검색 저장소
-
 @Slf4j
 @Repository
 public class PortfolioSearchRepository {
