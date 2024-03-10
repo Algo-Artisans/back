@@ -15,8 +15,8 @@ public class OAuthUserResDto {
     private String nickname;
     private String picture;
     private String role;
-    private FaceShape faceShapeBest;
-    private FaceShape faceShapeWorst;
+    private String faceShapeBest;
+    private String faceShapeWorst;
 
     @Builder
     public OAuthUserResDto(User user){

@@ -10,7 +10,6 @@ import java.util.List;
 public interface PortfolioHairStyleRepository extends JpaRepository<PortfolioHairStyle, Long> {
     List<PortfolioHairStyle> findPortfolioHairStyleByPortfolio(Portfolio portfolio);
 
-    List<PortfolioHairStyle> findPortfolioHairStyleByHairStyle_HairNameContaining(String s);
 
     List<PortfolioHairStyle> findByPortfolio(Portfolio portfolio);
 }

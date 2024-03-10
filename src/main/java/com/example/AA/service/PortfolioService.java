@@ -25,15 +25,12 @@ public class PortfolioService {
     private final LikeRepository likeRepository;
     private final AdvertisementRepository advertisementRepository;
     private final PortfolioHairStyleRepository portfolioHairStyleRepository;
-    private final WorkImageRepository workImageRepository;
     private final HairStyleRepository hairStyleRepository;
 
     // 내 포트폴리오 조회
     public PortfolioResDto getPortfolio(HttpServletRequest httpRequest) {
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
         Portfolio portfolio = portfolioRepository.findPortfolioByUser(user);
-        WorkImage savedWorkImage = workImageRepository.findWorkImageByPortfolio(portfolio)
-                .orElseThrow(() -> new RuntimeException("작업물을 찾을 수 없습니다."));
         List<PortfolioHairStyle> portfolioHairStyles = portfolioHairStyleRepository.findPortfolioHairStyleByPortfolio(portfolio);
 
         HairStyle hairStyle1 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(0).getHairStyle().getHairStyleId())
@@ -44,14 +41,22 @@ public class PortfolioService {
                 .orElseThrow(() -> new RuntimeException(""));
 
         // hairstyle 가져오는 코드
-
         return PortfolioResDto.builder()
                 .user(user)
-                .portfolio(portfolio)
-                .workImage(savedWorkImage)
-                .hairStyle1(hairStyle1)
-                .hairStyle2(hairStyle2)
-                .hairStyle3(hairStyle3)
+                .gender(portfolio.getGender())
+                .phoneNumber(portfolio.getPhoneNumber())
+                .workplace(portfolio.getWorkplace())
+                .snsAddress(portfolio.getSnsAddress())
+                .introduction(portfolio.getIntroduction())
+                .likesCount(portfolio.getLikesCount())
+                .profileURL(portfolio.getProfileURL())
+                .imageUrl1(portfolio.getImageUrl1())
+                .imageUrl2(portfolio.getImageUrl2())
+                .imageUrl3(portfolio.getImageUrl3())
+                .imageUrl4(portfolio.getImageUrl4())
+                .hairName1(hairStyle1.getHairName())
+                .hairName2(hairStyle2.getHairName())
+                .hairName3(hairStyle3.getHairName())
                 .build();
     }
 
@@ -63,8 +68,6 @@ public class PortfolioService {
         List<Portfolio> portfolioList = portfolioRepository.findAll();
         List<PortfolioResDto> portfolioListResDto = new ArrayList<>();
         for (Portfolio portfolio : portfolioList) {
-            WorkImage savedWorkImage = workImageRepository.findWorkImageByPortfolio(portfolio)
-                    .orElseThrow(() -> new RuntimeException("작업물을 찾을 수 없습니다."));
             List<PortfolioHairStyle> portfolioHairStyles = portfolioHairStyleRepository.findPortfolioHairStyleByPortfolio(portfolio);
 
             HairStyle hairStyle1 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(0).getHairStyle().getHairStyleId())
@@ -75,11 +78,20 @@ public class PortfolioService {
                     .orElseThrow(() -> new RuntimeException(""));
             PortfolioResDto portfolioResDto = PortfolioResDto.builder()
                     .user(user)
-                    .portfolio(portfolio)
-                    .workImage(savedWorkImage)
-                    .hairStyle1(hairStyle1)
-                    .hairStyle2(hairStyle2)
-                    .hairStyle3(hairStyle3)
+                    .gender(portfolio.getGender())
+                    .phoneNumber(portfolio.getPhoneNumber())
+                    .workplace(portfolio.getWorkplace())
+                    .snsAddress(portfolio.getSnsAddress())
+                    .introduction(portfolio.getIntroduction())
+                    .likesCount(portfolio.getLikesCount())
+                    .profileURL(portfolio.getProfileURL())
+                    .imageUrl1(portfolio.getImageUrl1())
+                    .imageUrl2(portfolio.getImageUrl2())
+                    .imageUrl3(portfolio.getImageUrl3())
+                    .imageUrl4(portfolio.getImageUrl4())
+                    .hairName1(hairStyle1.getHairName())
+                    .hairName2(hairStyle2.getHairName())
+                    .hairName3(hairStyle3.getHairName())
                     .build();
             portfolioListResDto.add(portfolioResDto);
         }
@@ -87,16 +99,37 @@ public class PortfolioService {
         return portfolioListResDto;
     }
 
+
     // 디자이너 포트폴리오 키워드 필터링 + 헤어스타일링에 어울리는 디자이너 추천
     public List<PortfolioResDto> searchPortfolio(HttpServletRequest httpRequest, String s) {
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
-        List<PortfolioResDto> portfolioListResDto = new ArrayList<>(); // 변수명 수정
-        log.info("searchPortfolio");
-
-        HairName hairName = HairName.containsTitle(s);
-        if (hairName != null) {
+        List<PortfolioResDto> portfolioListResDto = new ArrayList<>();
+        List<Portfolio> portfolioList = new ArrayList<>();
+        if (HairName.containsKeyword(s)) {
             log.info("searchPortfolio containsTitle");
-            portfolioListResDto = portfolioSearchRepository.searchHairname(hairName.name());
+            portfolioList = portfolioSearchRepository.searchHairname(s);
+
+            // Portfolio를 PortfolioResDto로 변환하여 리스트에 추가
+            for (Portfolio portfolio : portfolioList) {
+                portfolioListResDto.add(new PortfolioResDto(
+                        portfolio.getUser(),
+                        portfolio.getPortfolioId(),
+                        portfolio.getGender(),
+                        portfolio.getPhoneNumber(),
+                        portfolio.getWorkplace(),
+                        portfolio.getSnsAddress(),
+                        portfolio.getIntroduction(),
+                        portfolio.getLikesCount(),
+                        portfolio.getProfileURL(),
+                        portfolio.getImageUrl1(),
+                        portfolio.getImageUrl2(),
+                        portfolio.getImageUrl3(),
+                        portfolio.getImageUrl4(),
+                        portfolio.getPortfolioHairStyles().get(0).getHairStyle().getHairName(),
+                        portfolio.getPortfolioHairStyles().get(1).getHairStyle().getHairName(),
+                        portfolio.getPortfolioHairStyles().get(2).getHairStyle().getHairName()
+                ));
+            }
         }
 
         return portfolioListResDto;
@@ -104,10 +137,12 @@ public class PortfolioService {
 
 
 
+
     // 디자이너 포트폴리오 드롭다운 조회
 //    public PortfolioDropDownResDto dropdownPortfolio(HttpServletRequest httpRequest, String s) {
 //        return PortfolioDropDownResDto;
 //    }
+
 
     // 내 포트폴리오 삭제
     public void deletePortfolio(HttpServletRequest httpRequest) {
@@ -119,12 +154,9 @@ public class PortfolioService {
             portfolioHairStyleRepository.delete(portfolioHairStyle);
         }
 
-        List<WorkImage> workImages = workImageRepository.findByPortfolio(portfolio);
-        for (WorkImage workImage : workImages) {
-            workImageRepository.delete(workImage);
-        }
         portfolioRepository.delete(portfolio); // 포트폴리오 삭제
     }
+
 
     // 내가 받은 좋아요 조회
     public PortfolioLikesResDto getPortfolioLikes(HttpServletRequest httpRequest) {

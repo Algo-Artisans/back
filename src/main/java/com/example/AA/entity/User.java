@@ -34,13 +34,11 @@ public class User{
     @Column
     private String image;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "face_shape_best")
-    private FaceShape faceShapeBest;
+    private String faceShapeBest;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "face_shape_worst")
-    private FaceShape faceShapeWorst;
+    private String faceShapeWorst;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
@@ -69,11 +67,11 @@ public class User{
         this.image = fileurl;
     }
 
-    public void updateFaceShapeBest(FaceShape faceShapeBest) {
+    public void updateFaceShapeBest(String faceShapeBest) {
         this.faceShapeBest = faceShapeBest;
     }
 
-    public void updateFaceShapeWorst(FaceShape faceShapeWorst) {
+    public void updateFaceShapeWorst(String faceShapeWorst) {
         this.faceShapeWorst = faceShapeWorst;
     }
 
