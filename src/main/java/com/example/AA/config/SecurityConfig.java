@@ -45,7 +45,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000/","http://localhost:3001/"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000/","http://localhost:3001/","http://morak.shop/","http://www.morak.shop/"));
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("Set-Cookie");
         configuration.addAllowedMethod("*");
