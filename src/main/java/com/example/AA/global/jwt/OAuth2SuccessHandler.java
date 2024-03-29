@@ -47,7 +47,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("refreshToken: " + refreshToken);
 
         String newtargetUrl;
-        newtargetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000")
+        newtargetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/auth")
                 .queryParam("accessToken", accessToken)
                 .queryParam("firstLogin", firstLogin)
                 .build().toUriString();
