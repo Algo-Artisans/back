@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +37,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal(); // 카카오로부터 받은 유저 정보
         User user = userRepository.findUserByKakaoId(oAuth2User.getAttribute("id"))
                 .orElseThrow(() -> new UsernameNotFoundException("회원이 존재하지 않습니다.")); // 해당 id를 디비에서 조회
+        String firstLogin = (user != null) ? "no" : "yes";
         String role = String.valueOf(user.getRole());
 
         log.info("OAuth2User: " + oAuth2User);
@@ -43,21 +46,14 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("accessToken: " + accessToken);
         log.info("refreshToken: " + refreshToken);
 
-        writeTokenResponse(response, accessToken, refreshToken);
+        String newtargetUrl;
+        newtargetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000")
+                .queryParam("accessToken", accessToken)
+                .queryParam("firstLogin", firstLogin)
+                .build().toUriString();
+        getRedirectStrategy().sendRedirect(request, response, newtargetUrl);
     }
 
-    private void writeTokenResponse(HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
-        Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
-        accessTokenCookie.setPath("/");
-        response.addCookie(accessTokenCookie);
-
-        // Refresh Token 쿠키 설정
-        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-        refreshTokenCookie.setPath("/");
-        response.addCookie(refreshTokenCookie);
-
-        response.sendRedirect("http://localhost:8080");
-    }
 
 }
 
