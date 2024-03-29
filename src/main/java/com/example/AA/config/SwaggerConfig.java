@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 // http://localhost:8080/swagger-ui/
+// 왜안돼
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
