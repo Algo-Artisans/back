@@ -67,6 +67,9 @@ dependencies {
 	// QUERYDSL
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+	// ssh
+	implementation 'com.jcraft:jsch:0.1.55'
 }
 
 tasks.named('test') {

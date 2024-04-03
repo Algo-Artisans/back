@@ -1,6 +1,5 @@
 package com.example.AA.entity;
 
-import com.example.AA.entity.enumtype.FaceShape;
 import com.example.AA.entity.enumtype.Role;
 import com.sun.istack.NotNull;
 import lombok.AccessLevel;
@@ -27,12 +26,18 @@ public class User{
     @NotNull
     private Long kakaoId;
 
-    @Column
+    @Column(name="kakao_nickname")
     @NotNull
-    private String nickname;
+    private String kakaoNickname;
 
     @Column
     private String image;
+
+    @Column
+    private String nickname;
+
+    @Column
+    private String gender;
 
     @Column(name = "face_shape_best")
     private String faceShapeBest;
@@ -49,9 +54,9 @@ public class User{
     private Boolean deleteFlag;
 
     @Builder
-    public User(Long kakaoId, String nickname, String image) {
+    public User(Long kakaoId, String kakaoNickname, String image) {
         this.kakaoId = kakaoId;
-        this.nickname = nickname;
+        this.kakaoNickname = kakaoNickname;
         this.image = image;
         this.faceShapeBest = null;
         this.faceShapeWorst = null;
@@ -59,13 +64,6 @@ public class User{
     }
 
 
-    public void updateProfile(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void updateImage(String fileurl) {
-        this.image = fileurl;
-    }
 
     public void updateFaceShapeBest(String faceShapeBest) {
         this.faceShapeBest = faceShapeBest;
@@ -74,6 +72,10 @@ public class User{
     public void updateFaceShapeWorst(String faceShapeWorst) {
         this.faceShapeWorst = faceShapeWorst;
     }
+
+    public void updateGender(String gender){ this.gender = gender;}
+
+    public  void updateNickname(String nickname){this.nickname = nickname;}
 
     public void setRole(String role) {
         this.role = Role.valueOf(role);

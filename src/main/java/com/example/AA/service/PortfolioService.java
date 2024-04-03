@@ -44,7 +44,7 @@ public class PortfolioService {
         // hairstyle 가져오는 코드
         return PortfolioResDto.builder()
                 .user(user)
-                .gender(portfolio.getGender())
+                .name(portfolio.getName())
                 .phoneNumber(portfolio.getPhoneNumber())
                 .workplace(portfolio.getWorkplace())
                 .snsAddress(portfolio.getSnsAddress())
@@ -80,7 +80,7 @@ public class PortfolioService {
                     .orElseThrow(() -> new RuntimeException(""));
             PortfolioResDto portfolioResDto = PortfolioResDto.builder()
                     .user(user)
-                    .gender(portfolio.getGender())
+                    .name(portfolio.getName())
                     .phoneNumber(portfolio.getPhoneNumber())
                     .workplace(portfolio.getWorkplace())
                     .snsAddress(portfolio.getSnsAddress())
@@ -117,7 +117,7 @@ public class PortfolioService {
                 portfolioListResDto.add(new PortfolioResDto(
                         portfolio.getUser(),
                         portfolio.getPortfolioId(),
-                        portfolio.getGender(),
+                        portfolio.getName(),
                         portfolio.getPhoneNumber(),
                         portfolio.getWorkplace(),
                         portfolio.getSnsAddress(),
@@ -160,7 +160,7 @@ public class PortfolioService {
                 portfolioListResDto.add(new PortfolioResDto(
                         portfolio.getUser(),
                         portfolio.getPortfolioId(),
-                        portfolio.getGender(),
+                        portfolio.getName(),
                         portfolio.getPhoneNumber(),
                         portfolio.getWorkplace(),
                         portfolio.getSnsAddress(),
@@ -187,7 +187,7 @@ public class PortfolioService {
                 portfolioListResDto.add(new PortfolioResDto(
                         portfolio.getUser(),
                         portfolio.getPortfolioId(),
-                        portfolio.getGender(),
+                        portfolio.getName(),
                         portfolio.getPhoneNumber(),
                         portfolio.getWorkplace(),
                         portfolio.getSnsAddress(),
@@ -216,7 +216,7 @@ public class PortfolioService {
                 portfolioListResDto.add(new PortfolioResDto(
                         portfolio.getUser(),
                         portfolio.getPortfolioId(),
-                        portfolio.getGender(),
+                        portfolio.getName(),
                         portfolio.getPhoneNumber(),
                         portfolio.getWorkplace(),
                         portfolio.getSnsAddress(),

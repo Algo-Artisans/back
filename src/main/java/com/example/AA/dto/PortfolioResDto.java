@@ -13,7 +13,7 @@ import lombok.Getter;
 public class PortfolioResDto {
     private User user;
     private Long portfolioId;
-    private String gender;
+    private String name;
     private String phoneNumber;
     private String workplace;
     private String snsAddress;
@@ -32,13 +32,13 @@ public class PortfolioResDto {
 
     @Builder
     @QueryProjection
-    public PortfolioResDto(User user, Long portfolioId, String gender, String phoneNumber, String workplace,
+    public PortfolioResDto(User user, Long portfolioId, String name, String phoneNumber, String workplace,
                            String snsAddress, String introduction, int likesCount, String profileURL,
                            String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4,
                            String hairName1, String hairName2, String hairName3, int isAdvertise) {
         this.user = user;
         this.portfolioId = portfolioId;
-        this.gender = gender;
+        this.name = name;
         this.phoneNumber = phoneNumber;
         this.workplace = workplace;
         this.snsAddress = snsAddress;

@@ -100,6 +100,14 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
         return user != null ? OAuthUserResDto.builder().user(user).build() : null;
     }
 
+    public  void  updateNicknameGender(HttpServletRequest httpRequest, NicknameGenderReqDto nicknameGenderReqDto){
+        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+        user.updateNickname(nicknameGenderReqDto.getNickname());
+        user.updateGender(nicknameGenderReqDto.getGender());
+        userRepository.save(user);
+        return;
+    }
+
     public void updateFaceShape(HttpServletRequest httpRequest, FaceShapeReqDto faceShapeReqDto) {
         try {
             // FaceShape 열거형에 대응되는 값을 찾아 업데이트
@@ -135,7 +143,7 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
             // 포트폴리오 생성
             Portfolio portfolio = Portfolio.builder()
                     .user(user)
-                    .gender(portfolioReqDto.getGender())
+                    .name(portfolioReqDto.getName())
                     .phoneNumber(portfolioReqDto.getPhoneNumber())
                     .workplace(portfolioReqDto.getWorkplace())
                     .snsAddress(portfolioReqDto.getSnsAddress())
@@ -200,7 +208,7 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
 
             PortfolioResDto portfolioResDto = PortfolioResDto.builder()
                     .user(user)
-                    .gender(portfolioReqDto.getGender())
+                    .name(portfolioReqDto.getName())
                     .phoneNumber(portfolioReqDto.getPhoneNumber())
                     .workplace(portfolioReqDto.getWorkplace())
                     .snsAddress(portfolioReqDto.getSnsAddress())

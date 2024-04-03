@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 public class PortfolioReqDto {
-    private String gender;
+    private String name;
     private String phoneNumber;
     private String workplace;
     private String snsAddress;
@@ -24,12 +24,12 @@ public class PortfolioReqDto {
 
 
     @Builder
-    public PortfolioReqDto(String gender, String phoneNumber, String workplace,
+    public PortfolioReqDto(String name, String phoneNumber, String workplace,
                            String snsAddress, String introduction, int likesCount, String profileURL,
                            String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4,
                            String hairName1, String hairName2, String hairName3) {
 
-            this.gender = gender;
+            this.name = name;
             this.phoneNumber = phoneNumber;
             this.workplace = workplace;
             this.snsAddress = snsAddress;

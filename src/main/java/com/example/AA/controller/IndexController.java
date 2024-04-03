@@ -22,7 +22,7 @@ public class IndexController {
     public String index(Model model) {
         SessionUser user = (SessionUser) httpSession.getAttribute("user");
         if(user != null){
-            model.addAttribute("nickname", user.getNickname());
+            model.addAttribute("nickname", user.getKakaoNickname());
             model.addAttribute("picture", user.getImage());
         }
         return "index";

@@ -12,17 +12,22 @@ import java.util.Collections;
 
 @Getter
 public class OAuthUserResDto {
-    private String nickname;
+    private String kakaoNickname;
     private String picture;
     private String role;
+    private String gender;
+    private String nickname;
     private String faceShapeBest;
     private String faceShapeWorst;
 
+
     @Builder
     public OAuthUserResDto(User user){
-        this.nickname = user.getNickname();
+        this.kakaoNickname = user.getKakaoNickname();
         this.picture = user.getImage();
         this.role = String.valueOf(user.getRole());
+        this.gender = user.getGender();
+        this.nickname = user.getNickname();
         this.faceShapeBest = user.getFaceShapeBest();
         this.faceShapeWorst = user.getFaceShapeWorst();
     }

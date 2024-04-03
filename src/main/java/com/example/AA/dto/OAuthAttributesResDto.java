@@ -14,15 +14,15 @@ import java.util.Map;
 public class OAuthAttributesResDto {
     private Map<String, Object> attributes;
     private Long kakaoId;
-    private String nickname;
+    private String kakaoNickname;
     private String picture;
 
     @Builder
-    public OAuthAttributesResDto(Map<String, Object> attributes, Long kakaoId, String nickname,
+    public OAuthAttributesResDto(Map<String, Object> attributes, Long kakaoId, String kakaoNickname,
                                  String picture) {
         this.kakaoId = kakaoId;
         this.attributes = attributes;
-        this.nickname = nickname;
+        this.kakaoNickname = kakaoNickname;
         this.picture = picture;
     }
 
@@ -32,7 +32,7 @@ public class OAuthAttributesResDto {
 
         return OAuthAttributesResDto.builder()
                 .kakaoId((Long)attributes.get("id"))
-                .nickname((String)profile.get("nickname"))
+                .kakaoNickname((String)profile.get("nickname"))
                 .picture((String)profile.get("profile_image_url"))
                 .attributes(attributes)
                 .build();
@@ -41,7 +41,7 @@ public class OAuthAttributesResDto {
     public User toEntity() {
         User user = User.builder()
                 .kakaoId(kakaoId)
-                .nickname(nickname)
+                .kakaoNickname(kakaoNickname)
                 .image(picture)
                 .build();
 
