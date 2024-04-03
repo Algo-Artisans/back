@@ -25,6 +25,13 @@ public class UserController {
         return oAuthUserService.getUser(httpRequest);
     }
 
+    @Operation(summary = "닉네임 및 성별 등록")
+    @GetMapping("/nicknameGender")
+    public NicknameGenderResDto updateNicknameGender(HttpServletRequest httpRequest, @RequestBody NicknameGenderReqDto nicknameGenderReqDto){
+        oAuthUserService.updateNicknameGender(httpRequest, nicknameGenderReqDto);
+        return new NicknameGenderResDto(nicknameGenderReqDto.getNickname(), nicknameGenderReqDto.getGender());
+    }
+
     @Operation(summary = "얼굴형 AI 등록")
     @PostMapping("/face-shape")
     public FaceShapeResDto updateFaceShape(HttpServletRequest httpRequest, @RequestBody FaceShapeReqDto faceShapeReqDto) {

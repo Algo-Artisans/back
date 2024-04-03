@@ -24,7 +24,7 @@ public class Portfolio {
     private User user; // 01
 
     @Column
-    private String gender;
+    private String name;
 
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -66,11 +66,11 @@ public class Portfolio {
     private Integer isAdvertise;
 
     @Builder
-    public Portfolio(User user, String gender, String phoneNumber, String workplace,
+    public Portfolio(User user, String name, String phoneNumber, String workplace,
                      String snsAddress, String introduction, int likesCount,
                      String profileURL, String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4, LocalDateTime createdAt,Integer isAdvertise) {
         this.user = user;
-        this.gender = gender;
+        this.name = name;
         this.phoneNumber = phoneNumber;
         this.workplace = workplace;
         this.snsAddress = snsAddress;
