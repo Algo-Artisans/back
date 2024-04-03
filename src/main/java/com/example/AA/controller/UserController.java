@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @Operation(summary = "닉네임 및 성별 등록")
-    @GetMapping("/nicknameGender")
+    @PostMapping("/nicknameGender")
     public NicknameGenderResDto updateNicknameGender(HttpServletRequest httpRequest, @RequestBody NicknameGenderReqDto nicknameGenderReqDto){
         oAuthUserService.updateNicknameGender(httpRequest, nicknameGenderReqDto);
         return new NicknameGenderResDto(nicknameGenderReqDto.getNickname(), nicknameGenderReqDto.getGender());
