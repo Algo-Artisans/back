@@ -100,12 +100,11 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
         return user != null ? OAuthUserResDto.builder().user(user).build() : null;
     }
 
-    public  void  updateNicknameGender(HttpServletRequest httpRequest, NicknameGenderReqDto nicknameGenderReqDto){
+    public void updateNicknameGender(HttpServletRequest httpRequest, NicknameGenderReqDto nicknameGenderReqDto){
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
         user.updateNickname(nicknameGenderReqDto.getNickname());
         user.updateGender(nicknameGenderReqDto.getGender());
         userRepository.save(user);
-        return;
     }
 
     public void updateFaceShape(HttpServletRequest httpRequest, FaceShapeReqDto faceShapeReqDto) {
@@ -150,6 +149,14 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
                     .introduction(portfolioReqDto.getIntroduction())
                     .likesCount(portfolioReqDto.getLikesCount())
                     .profileURL(portfolioReqDto.getProfileURL())
+                    .styling1(portfolioReqDto.getStyling1())
+                    .cost1(portfolioReqDto.getCost1())
+                    .styling2(portfolioReqDto.getStyling2())
+                    .cost2(portfolioReqDto.getCost2())
+                    .styling3(portfolioReqDto.getStyling3())
+                    .cost3(portfolioReqDto.getCost3())
+                    .styling4(portfolioReqDto.getStyling4())
+                    .cost4(portfolioReqDto.getCost4())
                     .imageUrl1(portfolioReqDto.getImageUrl1())
                     .imageUrl2(portfolioReqDto.getImageUrl2())
                     .imageUrl3(portfolioReqDto.getImageUrl3())
@@ -219,6 +226,13 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
                     .imageUrl2(portfolioReqDto.getImageUrl2())
                     .imageUrl3(portfolioReqDto.getImageUrl3())
                     .imageUrl4(portfolioReqDto.getImageUrl4())
+                    .cost1(portfolioReqDto.getCost1())
+                    .styling2(portfolioReqDto.getStyling2())
+                    .cost2(portfolioReqDto.getCost2())
+                    .styling3(portfolioReqDto.getStyling3())
+                    .cost3(portfolioReqDto.getCost3())
+                    .styling4(portfolioReqDto.getStyling4())
+                    .cost4(portfolioReqDto.getCost4())
                     .hairName1(portfolioReqDto.getHairName1())
                     .hairName2(portfolioReqDto.getHairName2())
                     .hairName3(portfolioReqDto.getHairName3())
