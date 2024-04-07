@@ -65,10 +65,37 @@ public class Portfolio {
     @Column(name = "is_advertise", nullable = true)
     private Integer isAdvertise;
 
+    @Column
+    private String styling1;
+
+    @Column
+    private String cost1;
+
+    @Column
+    private String styling2;
+
+    @Column
+    private String cost2;
+
+    @Column
+    private String styling3;
+
+    @Column
+    private String cost3;
+
+    @Column
+    private String styling4;
+
+    @Column
+    private String cost4;
+
     @Builder
     public Portfolio(User user, String name, String phoneNumber, String workplace,
                      String snsAddress, String introduction, int likesCount,
-                     String profileURL, String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4, LocalDateTime createdAt,Integer isAdvertise) {
+                     String profileURL, String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4,
+                     String styling1, String cost1, String styling2, String cost2,
+                     String styling3, String cost3, String styling4, String cost4,
+                     LocalDateTime createdAt, Integer isAdvertise) {
         this.user = user;
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -81,6 +108,14 @@ public class Portfolio {
         this.imageUrl2 = imageUrl2;
         this.imageUrl3 = imageUrl3;
         this.imageUrl4 = imageUrl4;
+        this.styling1 = styling1;
+        this.cost1 = cost1;
+        this.styling2 = styling2;
+        this.cost2 = cost2;
+        this.styling3 = styling3;
+        this.cost3 = cost3;
+        this.styling4 = styling4;
+        this.cost4 = cost4;
         this.createdAt = LocalDateTime.now();
         this.isAdvertise = isAdvertise;
     }
