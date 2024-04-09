@@ -41,6 +41,7 @@ public class PortfolioService {
         HairStyle hairStyle3 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(2).getHairStyle().getHairStyleId())
                 .orElseThrow(() -> new RuntimeException(""));
 
+
         // hairstyle 가져오는 코드
         return PortfolioResDto.builder()
                 .user(user)
@@ -55,6 +56,14 @@ public class PortfolioService {
                 .imageUrl2(portfolio.getImageUrl2())
                 .imageUrl3(portfolio.getImageUrl3())
                 .imageUrl4(portfolio.getImageUrl4())
+                .styling1(portfolio.getStyling1())
+                .cost1(portfolio.getCost1())
+                .styling2(portfolio.getStyling2())
+                .cost2(portfolio.getCost2())
+                .styling3(portfolio.getStyling3())
+                .cost3(portfolio.getCost3())
+                .styling4(portfolio.getStyling4())
+                .cost4(portfolio.getCost4())
                 .hairName1(hairStyle1.getHairName())
                 .hairName2(hairStyle2.getHairName())
                 .hairName3(hairStyle3.getHairName())
@@ -91,6 +100,14 @@ public class PortfolioService {
                     .imageUrl2(portfolio.getImageUrl2())
                     .imageUrl3(portfolio.getImageUrl3())
                     .imageUrl4(portfolio.getImageUrl4())
+                    .styling1(portfolio.getStyling1())
+                    .cost1(portfolio.getCost1())
+                    .styling2(portfolio.getStyling2())
+                    .cost2(portfolio.getCost2())
+                    .styling3(portfolio.getStyling3())
+                    .cost3(portfolio.getCost3())
+                    .styling4(portfolio.getStyling4())
+                    .cost4(portfolio.getCost4())
                     .hairName1(hairStyle1.getHairName())
                     .hairName2(hairStyle2.getHairName())
                     .hairName3(hairStyle3.getHairName())
