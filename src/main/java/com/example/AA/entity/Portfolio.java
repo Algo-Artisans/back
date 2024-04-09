@@ -92,9 +92,8 @@ public class Portfolio {
     @Builder
     public Portfolio(User user, String name, String phoneNumber, String workplace,
                      String snsAddress, String introduction, int likesCount,
-                     String profileURL, String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4,
-                     String styling1, String cost1, String styling2, String cost2,
-                     String styling3, String cost3, String styling4, String cost4,
+                     String profileURL, String styling1, String cost1, String styling2,
+                     String cost2, String styling3, String cost3, String styling4, String cost4,
                      LocalDateTime createdAt, Integer isAdvertise) {
         this.user = user;
         this.name = name;
@@ -104,10 +103,6 @@ public class Portfolio {
         this.introduction = introduction;
         this.likesCount = likesCount;
         this.profileURL = profileURL;
-        this.imageUrl1 = imageUrl1;
-        this.imageUrl2 = imageUrl2;
-        this.imageUrl3 = imageUrl3;
-        this.imageUrl4 = imageUrl4;
         this.styling1 = styling1;
         this.cost1 = cost1;
         this.styling2 = styling2;
@@ -118,6 +113,12 @@ public class Portfolio {
         this.cost4 = cost4;
         this.createdAt = LocalDateTime.now();
         this.isAdvertise = isAdvertise;
+    }
+    public void uploadImageUrls(String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4) {
+        this.imageUrl1 = imageUrl1;
+        this.imageUrl2 = imageUrl2;
+        this.imageUrl3 = imageUrl3;
+        this.imageUrl4 = imageUrl4;
     }
 }
 
