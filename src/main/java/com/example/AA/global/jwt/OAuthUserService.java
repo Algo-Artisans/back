@@ -115,7 +115,7 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
                     User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
                     user.updateFaceShapeBest(String.valueOf(value));
                     userRepository.save(user);
-                    return;  // 업데이트 후 종료
+
                 }
             }
             for (FaceShape value : FaceShape.values()) {
