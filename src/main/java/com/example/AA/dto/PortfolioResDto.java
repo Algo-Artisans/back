@@ -6,11 +6,13 @@ import com.example.AA.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 
 
 @Getter
+@Setter
 public class PortfolioResDto {
     private User user;
     private Long portfolioId;
@@ -60,6 +62,7 @@ public class PortfolioResDto {
         this.imageUrl2 = imageUrl2;
         this.imageUrl3 = imageUrl3;
         this.imageUrl4 = imageUrl4;
+        this.styling1 = styling1;
         this.cost1 = cost1;
         this.styling2 = styling2;
         this.cost2 = cost2;
