@@ -32,8 +32,8 @@ public class PortfolioController {
 
     @Operation(summary = "내 포트폴리오 조회")
     @GetMapping("/myPortfolio")
-    public ResponseEntity<PortfolioResDto> getPortfolio(HttpServletRequest httpRequest) {
-        return ResponseEntity.ok(portfolioService.getPortfolio(httpRequest));
+    public ResponseEntity<PortfolioResDto> getPortfolio(HttpServletRequest httpRequest, Long portfoliId) {
+        return ResponseEntity.ok(portfolioService.getPortfolio(httpRequest, portfoliId));
     }
 
     @Operation(summary = "디자이너 포트폴리오 전체 조회")

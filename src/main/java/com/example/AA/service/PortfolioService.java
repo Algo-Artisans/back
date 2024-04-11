@@ -27,11 +27,15 @@ public class PortfolioService {
     private final LikeRepository likeRepository;
     private final PortfolioHairStyleRepository portfolioHairStyleRepository;
     private final HairStyleRepository hairStyleRepository;
+    private final UserRepository userRepository;
 
     // 내 포트폴리오 조회
-    public PortfolioResDto getPortfolio(HttpServletRequest httpRequest) {
-        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
-        Portfolio portfolio = portfolioRepository.findPortfolioByUser(user);
+    public PortfolioResDto getPortfolio(HttpServletRequest httpRequest, Long portfolioId) {
+        // User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+        Portfolio portfolio = portfolioRepository.findPortfolioByPortfolioId(portfolioId);
+        User user = portfolio.getUser();
+        log.info(String.valueOf(portfolio));
+        log.info(String.valueOf(user.getUserId()));
         List<PortfolioHairStyle> portfolioHairStyles = portfolioHairStyleRepository.findPortfolioHairStyleByPortfolio(portfolio);
 
         HairStyle hairStyle1 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(0).getHairStyle().getHairStyleId())
@@ -44,7 +48,8 @@ public class PortfolioService {
 
         // hairstyle 가져오는 코드
         return PortfolioResDto.builder()
-                .user(user)
+                .user(null)
+                .portfolioId(portfolio.getPortfolioId())
                 .name(portfolio.getName())
                 .phoneNumber(portfolio.getPhoneNumber())
                 .workplace(portfolio.getWorkplace())
@@ -89,6 +94,7 @@ public class PortfolioService {
                     .orElseThrow(() -> new RuntimeException(""));
             PortfolioResDto portfolioResDto = PortfolioResDto.builder()
                     .user(user)
+                    .portfolioId(portfolio.getPortfolioId())
                     .name(portfolio.getName())
                     .phoneNumber(portfolio.getPhoneNumber())
                     .workplace(portfolio.getWorkplace())
@@ -118,7 +124,6 @@ public class PortfolioService {
 
         return portfolioListResDto;
     }
-
 
     // 디자이너 포트폴리오 키워드 필터링 + 헤어스타일링에 어울리는 디자이너 추천
     public List<PortfolioResDto> searchPortfolio(HttpServletRequest httpRequest, String s) {
