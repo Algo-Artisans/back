@@ -6,6 +6,7 @@ import com.example.AA.global.jwt.OAuthUserService;
 import com.example.AA.service.PortfolioService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
+@Slf4j
 public class UserController {
 
     private final OAuthUserService oAuthUserService;
@@ -28,6 +30,7 @@ public class UserController {
     @Operation(summary = "닉네임 및 성별 등록")
     @PostMapping("/nicknameGender")
     public NicknameGenderResDto updateNicknameGender(HttpServletRequest httpRequest, @RequestBody NicknameGenderReqDto nicknameGenderReqDto){
+        log.info("updateNicknameGender:" + httpRequest);
         oAuthUserService.updateNicknameGender(httpRequest, nicknameGenderReqDto);
         return new NicknameGenderResDto(nicknameGenderReqDto.getNickname(), nicknameGenderReqDto.getGender());
     }
