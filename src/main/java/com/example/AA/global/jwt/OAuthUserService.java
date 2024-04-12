@@ -102,6 +102,7 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
 
     public void updateNicknameGender(HttpServletRequest httpRequest, NicknameGenderReqDto nicknameGenderReqDto){
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+        log.info("updateNicknameGender:" + user.getNickname());
         user.updateNickname(nicknameGenderReqDto.getNickname());
         user.updateGender(nicknameGenderReqDto.getGender());
         userRepository.save(user);
