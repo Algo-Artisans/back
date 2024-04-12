@@ -12,7 +12,7 @@ public class NicknameGenderReqDto {
     private String gender;
 
     @Builder
-    public NicknameGenderReqDto(String nickname, String fgender) {
+    public NicknameGenderReqDto(String nickname, String gender) {
         this.nickname= nickname;
         this.gender= gender;
     }
