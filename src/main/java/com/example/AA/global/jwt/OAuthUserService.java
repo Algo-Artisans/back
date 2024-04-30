@@ -212,6 +212,7 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
 
             PortfolioResDto portfolioResDto = PortfolioResDto.builder()
                     .user(user)
+                    .portfolioId(portfolio.getPortfolioId())
                     .name(portfolioReqDto.getName())
                     .phoneNumber(portfolioReqDto.getPhoneNumber())
                     .workplace(portfolioReqDto.getWorkplace())

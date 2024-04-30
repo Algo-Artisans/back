@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,13 +30,12 @@ public class PortfolioService {
     private final HairStyleRepository hairStyleRepository;
     private final UserRepository userRepository;
 
-    // 내 포트폴리오 조회
-    public PortfolioResDto getPortfolio(HttpServletRequest httpRequest, Long portfolioId) {
-        // User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
-        Portfolio portfolio = portfolioRepository.findPortfolioByPortfolioId(portfolioId);
-        User user = portfolio.getUser();
+    // 포트폴리오 세부 조회
+    public PortfolioResDto getPortfolio(Long portfolioId) {
+        Portfolio portfolio = portfolioSearchRepository.findByPortfolioId(portfolioId);
+        //User user = portfolio.getUser();
         log.info(String.valueOf(portfolio));
-        log.info(String.valueOf(user.getUserId()));
+        //log.info("유저는 뭘까요옹???",user.getUserId());
         List<PortfolioHairStyle> portfolioHairStyles = portfolioHairStyleRepository.findPortfolioHairStyleByPortfolio(portfolio);
 
         HairStyle hairStyle1 = hairStyleRepository.findHairStyleByHairStyleId(portfolioHairStyles.get(0).getHairStyle().getHairStyleId())
@@ -48,7 +48,7 @@ public class PortfolioService {
 
         // hairstyle 가져오는 코드
         return PortfolioResDto.builder()
-                .user(null)
+                .user(portfolio.getUser())
                 .portfolioId(portfolio.getPortfolioId())
                 .name(portfolio.getName())
                 .phoneNumber(portfolio.getPhoneNumber())
@@ -126,44 +126,87 @@ public class PortfolioService {
     }
 
     // 디자이너 포트폴리오 키워드 필터링 + 헤어스타일링에 어울리는 디자이너 추천
-    public List<PortfolioResDto> searchPortfolio(HttpServletRequest httpRequest, String s) {
+//    public List<PortfolioResDto> searchPortfolio(HttpServletRequest httpRequest, String s) {
+//        User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+//        List<PortfolioResDto> portfolioListResDto = new ArrayList<>();
+//        List<Portfolio> portfolioList = new ArrayList<>();
+//        if (HairName.containsKeyword(s)) {
+//            log.info("searchPortfolio containsTitle");
+//            portfolioList = portfolioSearchRepository.searchHairname(s);
+//
+//            // Portfolio를 PortfolioResDto로 변환하여 리스트에 추가
+//            for (Portfolio portfolio : portfolioList) {
+//                portfolioListResDto.add(new PortfolioResDto(
+//                        portfolio.getUser(),
+//                        portfolio.getPortfolioId(),
+//                        portfolio.getName(),
+//                        portfolio.getPhoneNumber(),
+//                        portfolio.getWorkplace(),
+//                        portfolio.getSnsAddress(),
+//                        portfolio.getIntroduction(),
+//                        portfolio.getLikesCount(),
+//                        portfolio.getProfileURL(),
+//                        portfolio.getImageUrl1(),
+//                        portfolio.getImageUrl2(),
+//                        portfolio.getImageUrl3(),
+//                        portfolio.getImageUrl4(),
+//                        portfolio.getStyling1(),
+//                        portfolio.getCost1(),
+//                        portfolio.getStyling2(),
+//                        portfolio.getCost2(),
+//                        portfolio.getStyling3(),
+//                        portfolio.getCost3(),
+//                        portfolio.getStyling4(),
+//                        portfolio.getCost4(),
+//                        portfolio.getPortfolioHairStyles().get(0).getHairStyle().getHairName(),
+//                        portfolio.getPortfolioHairStyles().get(1).getHairStyle().getHairName(),
+//                        portfolio.getPortfolioHairStyles().get(2).getHairStyle().getHairName(),
+//                        portfolio.getIsAdvertise()
+//                ));
+//            }
+//        }
+//
+//        return portfolioListResDto;
+//    }
+
+    public List<PortfolioResDto> searchPortfolio(HttpServletRequest httpRequest, String input) {
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
         List<PortfolioResDto> portfolioListResDto = new ArrayList<>();
-        List<Portfolio> portfolioList = new ArrayList<>();
-        if (HairName.containsKeyword(s)) {
-            log.info("searchPortfolio containsTitle");
-            portfolioList = portfolioSearchRepository.searchHairname(s);
 
-            // Portfolio를 PortfolioResDto로 변환하여 리스트에 추가
-            for (Portfolio portfolio : portfolioList) {
-                portfolioListResDto.add(new PortfolioResDto(
-                        portfolio.getUser(),
-                        portfolio.getPortfolioId(),
-                        portfolio.getName(),
-                        portfolio.getPhoneNumber(),
-                        portfolio.getWorkplace(),
-                        portfolio.getSnsAddress(),
-                        portfolio.getIntroduction(),
-                        portfolio.getLikesCount(),
-                        portfolio.getProfileURL(),
-                        portfolio.getImageUrl1(),
-                        portfolio.getImageUrl2(),
-                        portfolio.getImageUrl3(),
-                        portfolio.getImageUrl4(),
-                        portfolio.getStyling1(),
-                        portfolio.getCost1(),
-                        portfolio.getStyling2(),
-                        portfolio.getCost2(),
-                        portfolio.getStyling3(),
-                        portfolio.getCost3(),
-                        portfolio.getStyling4(),
-                        portfolio.getCost4(),
-                        portfolio.getPortfolioHairStyles().get(0).getHairStyle().getHairName(),
-                        portfolio.getPortfolioHairStyles().get(1).getHairStyle().getHairName(),
-                        portfolio.getPortfolioHairStyles().get(2).getHairStyle().getHairName(),
-                        portfolio.getIsAdvertise()
-                ));
-            }
+        // 입력 문자열을 쉼표를 기준으로 나누어 각각의 헤어스타일 이름으로 처리
+        List<String> hairNames = Arrays.asList(input.split(","));
+
+        // 헤어스타일 이름으로 포트폴리오 검색
+        List<Portfolio> portfolioList = portfolioSearchRepository.searchHairNames(hairNames);
+
+        for (Portfolio portfolio : portfolioList) {
+            portfolioListResDto.add(new PortfolioResDto(
+                    portfolio.getUser(),
+                    portfolio.getPortfolioId(),
+                    portfolio.getName(),
+                    portfolio.getPhoneNumber(),
+                    portfolio.getWorkplace(),
+                    portfolio.getSnsAddress(),
+                    portfolio.getIntroduction(),
+                    portfolio.getLikesCount(),
+                    portfolio.getProfileURL(),
+                    portfolio.getImageUrl1(),
+                    portfolio.getImageUrl2(),
+                    portfolio.getImageUrl3(),
+                    portfolio.getImageUrl4(),
+                    portfolio.getStyling1(),
+                    portfolio.getCost1(),
+                    portfolio.getStyling2(),
+                    portfolio.getCost2(),
+                    portfolio.getStyling3(),
+                    portfolio.getCost3(),
+                    portfolio.getStyling4(),
+                    portfolio.getCost4(),
+                    portfolio.getPortfolioHairStyles().get(0).getHairStyle().getHairName(),
+                    portfolio.getPortfolioHairStyles().get(1).getHairStyle().getHairName(),
+                    portfolio.getPortfolioHairStyles().get(2).getHairStyle().getHairName(),
+                    portfolio.getIsAdvertise()
+            ));
         }
 
         return portfolioListResDto;
