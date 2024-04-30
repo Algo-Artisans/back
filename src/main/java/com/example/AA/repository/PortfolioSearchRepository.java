@@ -8,7 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -69,11 +71,10 @@ public class PortfolioSearchRepository {
 
 
     public List<Portfolio> searchHairNames(List<String> hairNames) {
-
         QPortfolio portfolio = QPortfolio.portfolio;
         QPortfolioHairStyle qportfolioHairStyle = QPortfolioHairStyle.portfolioHairStyle;
 
-        List<Long> portfolioIds = new ArrayList<>();
+        Set<Long> portfolioIds = new HashSet<>();
 
         for (String hairName : hairNames) {
             Long hairStyleId = queryFactory
@@ -93,14 +94,17 @@ public class PortfolioSearchRepository {
             }
         }
 
+        // 중복을 제거하고 List로 변환
+        List<Long> uniquePortfolioIds = new ArrayList<>(portfolioIds);
+
         return queryFactory
                 .selectFrom(portfolio)
                 .distinct()
                 .leftJoin(portfolio.user).fetchJoin()
                 .leftJoin(portfolio.portfolioHairStyles, qportfolioHairStyle).fetchJoin()
-                .where(portfolio.portfolioId.in(portfolioIds))
+                .where(portfolio.portfolioId.in(uniquePortfolioIds))
                 .fetch();
     }
-
-
 }
+
+
