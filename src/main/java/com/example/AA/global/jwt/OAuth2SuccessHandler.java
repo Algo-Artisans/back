@@ -46,8 +46,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("accessToken: " + accessToken);
         log.info("refreshToken: " + refreshToken);
 
+        // https://morak-morak-demo.vercel.app/auth
         String newtargetUrl;
-        newtargetUrl = UriComponentsBuilder.fromUriString("https://morak-morak-demo.vercel.app/auth")
+        newtargetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/auth")
                 .queryParam("accessToken", accessToken)
                 .queryParam("firstLogin", firstLogin)
                 .build().toUriString();
