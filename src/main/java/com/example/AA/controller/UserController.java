@@ -50,7 +50,7 @@ public class UserController {
 
     @Operation(summary = "내가 누른 디자이너 좋아요 확인")
     @GetMapping("/like/hairstylists")
-    public ResponseEntity<List<LikeResDto>> getLikeHairstylists(HttpServletRequest httpRequest) {
+    public ResponseEntity<List<PortfolioResDto>> getLikeHairstylists(HttpServletRequest httpRequest) {
         return ResponseEntity.ok(portfolioService.getLikeHairstylists(httpRequest));
     }
 

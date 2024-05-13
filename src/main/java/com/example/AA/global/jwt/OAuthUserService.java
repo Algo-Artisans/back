@@ -67,7 +67,6 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
             userRepository.save(user);
 
             Role updatedRole = user.getRole();
-            System.out.println("Updated User: " + user);
             System.out.println("Updated User Role: " + updatedRole);
 
         } catch (Exception e) {

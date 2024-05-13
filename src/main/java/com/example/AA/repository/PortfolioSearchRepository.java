@@ -105,6 +105,52 @@ public class PortfolioSearchRepository {
                 .where(portfolio.portfolioId.in(uniquePortfolioIds))
                 .fetch();
     }
+
+    public List<Portfolio> findAll() {
+        QPortfolio portfolio = QPortfolio.portfolio;
+        return queryFactory
+                .selectFrom(portfolio)
+                .leftJoin(portfolio.user).fetchJoin()
+                .fetch();
+    }
+
+    public List<Portfolio> findAllByLike(List<Long> portfolioIds) {
+        QPortfolio portfolio = QPortfolio.portfolio;
+        return queryFactory
+                .selectFrom(portfolio)
+                .leftJoin(portfolio.user).fetchJoin()
+                .where(portfolio.portfolioId.in(portfolioIds))
+                .fetch();
+    }
+
+    public List<Portfolio> findAllOrderByCreatedAtDesc() {
+        QPortfolio portfolio = QPortfolio.portfolio;
+        return queryFactory
+                .selectFrom(portfolio)
+                .leftJoin(portfolio.user).fetchJoin()
+                .orderBy(portfolio.createdAt.desc())
+                .fetch();
+    }
+
+    public List<Portfolio> findByIsAdvertiseOrderByCreatedAtDesc(int isAdvertise) {
+        QPortfolio portfolio = QPortfolio.portfolio;
+        return queryFactory
+                .selectFrom(portfolio)
+                .leftJoin(portfolio.user).fetchJoin()
+                .where(portfolio.isAdvertise.eq(isAdvertise))
+                .orderBy(portfolio.createdAt.desc())
+                .fetch();
+    }
+
+    public List<Portfolio> findAllOrderByLikesCountDesc() {
+        QPortfolio portfolio = QPortfolio.portfolio;
+        return queryFactory
+                .selectFrom(portfolio)
+                .leftJoin(portfolio.user).fetchJoin()
+                .orderBy(portfolio.likesCount.desc())
+                .fetch();
+    }
+
 }
 
 
