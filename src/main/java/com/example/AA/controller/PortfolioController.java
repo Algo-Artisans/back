@@ -38,8 +38,8 @@ public class PortfolioController {
 
     @Operation(summary = "디자이너 포트폴리오 전체 조회")
     @GetMapping("/portfolios")
-    public ResponseEntity<List<PortfolioResDto>> getPortfolios(HttpServletRequest httpRequest){
-        List<PortfolioResDto> portfolioListResDto = portfolioService.getPortfolios(httpRequest);
+    public ResponseEntity<List<PortfolioResDto>> getPortfolios(){
+        List<PortfolioResDto> portfolioListResDto = portfolioService.getPortfolios();
         return ResponseEntity.ok(portfolioListResDto);
     }
 
@@ -47,9 +47,9 @@ public class PortfolioController {
     // http://localhost:8080/api/v1/search/portfolios?hairstyle=단발 C컬펌
     @Operation(summary = "디자이너 포트폴리오 키워드 검색, 헤어스타일링에 어울리는 디자이너 추천")
     @GetMapping("/search/portfolios")
-    public ResponseEntity<List<PortfolioResDto>> searchPortfolio(HttpServletRequest httpRequest,@RequestParam(name = "hairstyle") String s){
+    public ResponseEntity<List<PortfolioResDto>> searchPortfolio(@RequestParam(name = "hairstyle") String s){
         log.info("searchPortfolio");
-        return ResponseEntity.ok(portfolioService.searchPortfolio(httpRequest,s));
+        return ResponseEntity.ok(portfolioService.searchPortfolio(s));
     }
 
     // http://localhost:8080/api/v1/dropdown/portfolios?dropdown=최신순

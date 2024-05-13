@@ -14,7 +14,6 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
 
     Portfolio findPortfolioByPortfolioId(Long portfolioId);
 
-    List<Portfolio> findByIsAdvertise(int i);
 
 
 }
