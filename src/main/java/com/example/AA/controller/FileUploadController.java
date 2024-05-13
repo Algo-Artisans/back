@@ -41,6 +41,11 @@ public class FileUploadController {
             Portfolio portfolio = portfolioRepository.findPortfolioByUser(user);
 
             for (MultipartFile file : files) {
+                // 파일이 없으면 스킵
+                if (file == null) {
+                    continue;
+                }
+
                 String fileName = file.getOriginalFilename();
 
                 // S3 Presigned URL 및 objectKey 생성
@@ -56,7 +61,25 @@ public class FileUploadController {
                 s3service.uploadFileToS3(objectKey, file, metadata);
                 preSignedUrls.add(preSignedUrl);
             }
-            portfolio.uploadImageUrls(preSignedUrls.get(0), preSignedUrls.get(1), preSignedUrls.get(2), preSignedUrls.get(3));
+
+            // 업로드된 파일의 개수만큼 Presigned URL을 사용하여 포트폴리오에 이미지 URL을 저장
+            switch (preSignedUrls.size()) {
+                case 4:
+                    portfolio.uploadImageUrls(preSignedUrls.get(0), preSignedUrls.get(1), preSignedUrls.get(2), preSignedUrls.get(3));
+                    break;
+                case 3:
+                    portfolio.uploadImageUrls(preSignedUrls.get(0), preSignedUrls.get(1), preSignedUrls.get(2), null);
+                    break;
+                case 2:
+                    portfolio.uploadImageUrls(preSignedUrls.get(0), preSignedUrls.get(1), null, null);
+                    break;
+                case 1:
+                    portfolio.uploadImageUrls(preSignedUrls.get(0), null, null, null);
+                    break;
+                default:
+                    break;
+            }
+
             portfolioRepository.save(portfolio);
             return ResponseEntity.ok(preSignedUrls);
         } catch (IOException e) {
@@ -67,7 +90,8 @@ public class FileUploadController {
 
 
 
-	private String removeQueryString(String url) {
+
+    private String removeQueryString(String url) {
 		int index = url.indexOf("?");
 		return (index == -1) ? url : url.substring(0, index);
 	}

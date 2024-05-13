@@ -30,7 +30,7 @@ public class PortfolioController {
         return ResponseEntity.ok(oAuthUserService.createPortfolio(httpRequest, portfolioReqDto));
     }
 
-    @Operation(summary = "내 포트폴리오 조회")
+    @Operation(summary = "특정 포트폴리오 조회")
     @GetMapping("/myPortfolio")
     public ResponseEntity<PortfolioResDto> getPortfolio(Long portfolioId) {
         return ResponseEntity.ok(portfolioService.getPortfolio(portfolioId));
