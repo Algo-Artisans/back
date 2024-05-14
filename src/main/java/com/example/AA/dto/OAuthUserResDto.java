@@ -19,6 +19,7 @@ public class OAuthUserResDto {
     private String nickname;
     private String faceShapeBest;
     private String faceShapeWorst;
+    private String kakaoId;
 
 
     @Builder
@@ -30,6 +31,7 @@ public class OAuthUserResDto {
         this.nickname = user.getNickname();
         this.faceShapeBest = user.getFaceShapeBest();
         this.faceShapeWorst = user.getFaceShapeWorst();
+        this.kakaoId = String.valueOf(user.getKakaoId());
     }
 
 
