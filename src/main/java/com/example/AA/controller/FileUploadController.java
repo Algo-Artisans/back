@@ -6,6 +6,7 @@ import com.example.AA.entity.User;
 import com.example.AA.global.jwt.JwtTokenProvider;
 import com.example.AA.global.s3.S3Service;
 import com.example.AA.repository.PortfolioRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,7 @@ public class FileUploadController {
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 
+    @Operation(summary = "작업물 이미지 등록")
     @PostMapping("/upload")
     public ResponseEntity<List<String>> uploadFiles(HttpServletRequest httpRequest,
                                                     @RequestParam("files") List<MultipartFile> files) {
@@ -89,6 +91,42 @@ public class FileUploadController {
     }
 
 
+    @Operation(summary = "프로필 이미지 등록")
+    @PostMapping("/upload/profile")
+    public ResponseEntity<String> uploadProfileImage(HttpServletRequest httpRequest,
+                                                     @RequestParam("file") MultipartFile file) {
+        try {
+            if (file == null) {
+                return ResponseEntity.badRequest().body("File is required.");
+            }
+
+            User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+            Portfolio portfolio = portfolioRepository.findPortfolioByUser(user);
+
+            String fileName = file.getOriginalFilename();
+
+            // S3 Presigned URL 및 objectKey 생성
+            Map<String, Serializable> presignedUrlInfo = s3service.getPreSignedUrl(httpRequest, fileName);
+            String preSignedUrl = removeQueryString(presignedUrlInfo.get("preSignedUrl").toString());
+            String objectKey = presignedUrlInfo.get("objectKey").toString();
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            metadata.setContentLength(file.getSize());
+
+            // S3에 파일 업로드
+            s3service.uploadFileToS3(objectKey, file, metadata);
+
+            // 프로필 이미지 URL을 유저 정보에 저장
+            portfolio.uploadProfileUrl(preSignedUrl);
+            portfolioRepository.save(portfolio);
+
+            return ResponseEntity.ok(preSignedUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 
     private String removeQueryString(String url) {
