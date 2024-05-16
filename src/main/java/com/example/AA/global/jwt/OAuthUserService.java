@@ -216,7 +216,7 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
                     .workplace(portfolioReqDto.getWorkplace())
                     .snsAddress(portfolioReqDto.getSnsAddress())
                     .introduction(portfolioReqDto.getIntroduction())
-                    .likesCount(portfolioReqDto.getLikesCount())
+                    .likesCount(portfolio.getLikesCount())
                     .profileURL(portfolio.getProfileURL())
                     .imageUrl1(portfolio.getImageUrl1())
                     .imageUrl2(portfolio.getImageUrl2())
