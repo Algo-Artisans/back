@@ -44,6 +44,9 @@ public class Portfolio {
     @Column(name = "profile_url")
     private String profileURL;
 
+    @Column(name = "certificate_url")
+    private String certificateURL;
+
     @Column(name = "image_url_1", nullable = true)
     private String imageUrl1;
 
@@ -123,5 +126,10 @@ public class Portfolio {
     public void uploadProfileUrl(String profileURL) {
         this.profileURL = profileURL;
     }
+
+    public void uploadCertificateUrl(String certificateURL) {
+        this.certificateURL = certificateURL;
+    }
+
 }
 

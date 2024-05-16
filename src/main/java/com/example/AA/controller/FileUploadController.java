@@ -34,7 +34,7 @@ public class FileUploadController {
 	private String bucket;
 
     @Operation(summary = "작업물 이미지 등록")
-    @PostMapping("/upload")
+    @PostMapping("/upload/files")
     public ResponseEntity<List<String>> uploadFiles(HttpServletRequest httpRequest,
                                                     @RequestParam("files") List<MultipartFile> files) {
         try {
@@ -90,44 +90,121 @@ public class FileUploadController {
         }
     }
 
-
-    @Operation(summary = "프로필 이미지 등록")
-    @PostMapping("/upload/profile")
-    public ResponseEntity<String> uploadProfileImage(HttpServletRequest httpRequest,
-                                                     @RequestParam("file") MultipartFile file) {
+    @Operation(summary = "파일 업로드")
+    @PostMapping("/upload/flie")
+    public ResponseEntity<String> uploadFile(HttpServletRequest httpRequest,
+                                             @RequestParam(value = "profile", required = false) MultipartFile profileFile,
+                                             @RequestParam(value = "certificate", required = false) MultipartFile certificateFile) {
         try {
-            if (file == null) {
+            if (profileFile == null && certificateFile == null) {
                 return ResponseEntity.badRequest().body("File is required.");
             }
 
             User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
             Portfolio portfolio = portfolioRepository.findPortfolioByUser(user);
 
-            String fileName = file.getOriginalFilename();
-
-            // S3 Presigned URL 및 objectKey 생성
-            Map<String, Serializable> presignedUrlInfo = s3service.getPreSignedUrl(httpRequest, fileName);
-            String preSignedUrl = removeQueryString(presignedUrlInfo.get("preSignedUrl").toString());
-            String objectKey = presignedUrlInfo.get("objectKey").toString();
-
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(file.getContentType());
-            metadata.setContentLength(file.getSize());
-
-            // S3에 파일 업로드
-            s3service.uploadFileToS3(objectKey, file, metadata);
-
-            // 프로필 이미지 URL을 유저 정보에 저장
-            portfolio.uploadProfileUrl(preSignedUrl);
-            portfolioRepository.save(portfolio);
-
-            return ResponseEntity.ok(preSignedUrl);
+            if (profileFile != null) {
+                // 프로필 이미지 업로드 처리
+                return handleProfileUpload(httpRequest, profileFile, portfolio);
+            } else if (certificateFile != null) {
+                // 인증서 업로드 처리
+                return handleCertificateUpload(httpRequest, certificateFile, portfolio);
+            } else {
+                return ResponseEntity.badRequest().body("Invalid file type.");
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+    private ResponseEntity<String> handleProfileUpload(HttpServletRequest httpRequest,
+                                                       MultipartFile profileFile,
+                                                       Portfolio portfolio) throws IOException {
+        String fileName = profileFile.getOriginalFilename();
+
+        // S3 Presigned URL 및 objectKey 생성
+        Map<String, Serializable> presignedUrlInfo = s3service.getPreSignedUrl(httpRequest, fileName);
+        String preSignedUrl = removeQueryString(presignedUrlInfo.get("preSignedUrl").toString());
+        String objectKey = presignedUrlInfo.get("objectKey").toString();
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(profileFile.getContentType());
+        metadata.setContentLength(profileFile.getSize());
+
+        // S3에 파일 업로드
+        s3service.uploadFileToS3(objectKey, profileFile, metadata);
+
+        // 프로필 이미지 URL을 포트폴리오에 저장
+        portfolio.uploadProfileUrl(preSignedUrl);
+        portfolioRepository.save(portfolio);
+
+        return ResponseEntity.ok(preSignedUrl);
+    }
+
+    private ResponseEntity<String> handleCertificateUpload(HttpServletRequest httpRequest,
+                                                           MultipartFile certificateFile,
+                                                           Portfolio portfolio) throws IOException {
+        String fileName = certificateFile.getOriginalFilename();
+
+        // S3 Presigned URL 및 objectKey 생성
+        Map<String, Serializable> presignedUrlInfo = s3service.getPreSignedUrl(httpRequest, fileName);
+        String preSignedUrl = removeQueryString(presignedUrlInfo.get("preSignedUrl").toString());
+        String objectKey = presignedUrlInfo.get("objectKey").toString();
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(certificateFile.getContentType());
+        metadata.setContentLength(certificateFile.getSize());
+
+        // S3에 파일 업로드
+        s3service.uploadFileToS3(objectKey, certificateFile, metadata);
+
+        // 인증서 URL을 포트폴리오에 저장
+        portfolio.uploadCertificateUrl(preSignedUrl);
+        portfolioRepository.save(portfolio);
+
+        return ResponseEntity.ok(preSignedUrl);
+    }
+
+
+
+//    @Operation(summary = "프로필 이미지 등록")
+//    @PostMapping("/upload/profile")
+//    public ResponseEntity<String> uploadProfileImage(HttpServletRequest httpRequest,
+//                                                     @RequestParam("file") MultipartFile file) {
+//        try {
+//            if (file == null) {
+//                return ResponseEntity.badRequest().body("File is required.");
+//            }
+//
+//            User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
+//            Portfolio portfolio = portfolioRepository.findPortfolioByUser(user);
+//
+//            String fileName = file.getOriginalFilename();
+//
+//            // S3 Presigned URL 및 objectKey 생성
+//            Map<String, Serializable> presignedUrlInfo = s3service.getPreSignedUrl(httpRequest, fileName);
+//            String preSignedUrl = removeQueryString(presignedUrlInfo.get("preSignedUrl").toString());
+//            String objectKey = presignedUrlInfo.get("objectKey").toString();
+//
+//            ObjectMetadata metadata = new ObjectMetadata();
+//            metadata.setContentType(file.getContentType());
+//            metadata.setContentLength(file.getSize());
+//
+//            // S3에 파일 업로드
+//            s3service.uploadFileToS3(objectKey, file, metadata);
+//
+//            // 프로필 이미지 URL을 유저 정보에 저장
+//            portfolio.uploadProfileUrl(preSignedUrl);
+//            portfolioRepository.save(portfolio);
+//
+//            return ResponseEntity.ok(preSignedUrl);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
+//
 
     private String removeQueryString(String url) {
 		int index = url.indexOf("?");

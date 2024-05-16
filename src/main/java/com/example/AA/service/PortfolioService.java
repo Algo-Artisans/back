@@ -43,6 +43,7 @@ public class PortfolioService {
                 .introduction(portfolio.getIntroduction())
                 .likesCount(portfolio.getLikesCount())
                 .profileURL(portfolio.getProfileURL())
+                .certificateURL(portfolio.getCertificateURL())
                 .imageUrl1(portfolio.getImageUrl1())
                 .imageUrl2(portfolio.getImageUrl2())
                 .imageUrl3(portfolio.getImageUrl3())
