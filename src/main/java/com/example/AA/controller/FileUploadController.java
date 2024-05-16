@@ -91,7 +91,7 @@ public class FileUploadController {
     }
 
     @Operation(summary = "파일 업로드")
-    @PostMapping("/upload/flie")
+    @PostMapping("/upload/file")
     public ResponseEntity<String> uploadFile(HttpServletRequest httpRequest,
                                              @RequestParam(value = "profile", required = false) MultipartFile profileFile,
                                              @RequestParam(value = "certificate", required = false) MultipartFile certificateFile) {
