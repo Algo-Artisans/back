@@ -107,7 +107,7 @@ public class PortfolioService {
         // 헤어스타일 이름으로 포트폴리오 검색
         List<Portfolio> filteredPortfolioList = portfolioSearchRepository.searchHairNames(hairNames);
 
-        // 정렬 기준에 따른 포트폴리오 리스트 생성
+        // 정렬 기준에 따른 포트폴리오 리스트 생성하기
         if (s == null || s.isEmpty() || s.equals("최신순")) {
             log.info("최신순");
             filteredPortfolioList.sort(Comparator.comparing(Portfolio::getCreatedAt).reversed());
