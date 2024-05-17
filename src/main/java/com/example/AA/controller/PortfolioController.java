@@ -55,8 +55,12 @@ public class PortfolioController {
     // http://localhost:8080/api/v1/dropdown/portfolios?dropdown=최신순
     @Operation(summary = "디자이너 포트폴리오 드롭다운 조회")
     @GetMapping("/dropdown/portfolios")
-    public ResponseEntity<List<PortfolioResDto>> dropdownPortfolio(HttpServletRequest httpRequest,@RequestParam(name = "dropdown") String s){
-        return ResponseEntity.ok(portfolioService.dropdownPortfolio(httpRequest,s));
+    public ResponseEntity<List<PortfolioResDto>> dropdownPortfolio(
+            HttpServletRequest httpRequest,
+            @RequestParam(name = "dropdown") String s,
+            @RequestParam(name = "input") String input) {
+
+        return ResponseEntity.ok(portfolioService.searchAndDropdownPortfolio(httpRequest, input, s));
     }
 
 
