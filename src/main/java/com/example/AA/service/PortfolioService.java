@@ -96,33 +96,40 @@ public class PortfolioService {
 
 
     // 디자이너 포트폴리오 드롭다운 조회
-    // 디자이너 포트폴리오 드롭다운 조회
-    public List<PortfolioResDto> dropdownPortfolio(HttpServletRequest httpRequest, String s) {
+    public List<PortfolioResDto> searchAndDropdownPortfolio(HttpServletRequest httpRequest, String input, String s) {
         User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
         List<PortfolioResDto> portfolioListResDto = new ArrayList<>();
-        List<Portfolio> portfolioList = null;
+        List<Portfolio> portfolioList = new ArrayList<>();
 
-        // 최신순
-        if (s.equals("최신순")) {
+        // 입력 문자열을 쉼표를 기준으로 나누어 각각의 헤어스타일 이름으로 처리
+        List<String> hairNames = Arrays.asList(input.split(","));
+
+        // 헤어스타일 이름으로 포트폴리오 검색
+        List<Portfolio> filteredPortfolioList = portfolioSearchRepository.searchHairNames(hairNames);
+
+        // 정렬 기준에 따른 포트폴리오 리스트 생성
+        if (s == null || s.isEmpty() || s.equals("최신순")) {
             log.info("최신순");
-            portfolioList = portfolioSearchRepository.findAllOrderByCreatedAtDesc();
-        }
-        // 광고순
-        if (s.equals("광고순")) {
-            log.info("광고순");
-            portfolioList = portfolioSearchRepository.findByIsAdvertiseOrderByCreatedAtDesc(1);
-        }
-        // 좋아요순
-        if (s.equals("좋아요순")) {
+            filteredPortfolioList.sort(Comparator.comparing(Portfolio::getCreatedAt).reversed());
+        } else if (s.equals("추천순")) {
+            log.info("추천순");
+            filteredPortfolioList = filteredPortfolioList.stream()
+                    .filter(portfolio -> portfolio.getIsAdvertise() != null && portfolio.getIsAdvertise() == 1)
+                    .sorted(Comparator.comparing(Portfolio::getCreatedAt).reversed())
+                    .collect(Collectors.toList());
+        } else if (s.equals("좋아요순")) {
             log.info("좋아요순");
-            portfolioList = portfolioSearchRepository.findAllOrderByLikesCountDesc();
+            filteredPortfolioList.sort(Comparator.comparing(Portfolio::getLikesCount).reversed());
+        } else {
+            // 기본 정렬 기준 (예: 최신순)
+            log.info("기본 정렬 기준: 최신순");
+            filteredPortfolioList.sort(Comparator.comparing(Portfolio::getCreatedAt).reversed());
         }
 
-        if (portfolioList != null) {
-            portfolioListResDto = portfolioList.stream()
-                    .map(this::createPortfolioResDto)
-                    .collect(Collectors.toList());
-        }
+        // 포트폴리오 리스트를 DTO로 변환
+        portfolioListResDto = filteredPortfolioList.stream()
+                .map(this::createPortfolioResDto)
+                .collect(Collectors.toList());
 
         return portfolioListResDto;
     }
