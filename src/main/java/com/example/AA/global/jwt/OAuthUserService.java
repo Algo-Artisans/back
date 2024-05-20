@@ -156,6 +156,12 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
                     .cost3(portfolioReqDto.getCost3())
                     .styling4(portfolioReqDto.getStyling4())
                     .cost4(portfolioReqDto.getCost4())
+                    .profileURL(portfolioReqDto.getProfileURL())
+                    .certificateURL(portfolioReqDto.getCertificateURL())
+                    .imageUrl1(portfolioReqDto.getImageUrl1())
+                    .imageUrl2(portfolioReqDto.getImageUrl2())
+                    .imageUrl3(portfolioReqDto.getImageUrl3())
+                    .imageUrl4(portfolioReqDto.getImageUrl4())
                     .isAdvertise(0)
                     .build();
 

@@ -40,7 +40,7 @@ public class FileUploadController {
         try {
             List<String> preSignedUrls = new ArrayList<>();
             User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
-            Portfolio portfolio = portfolioRepository.findPortfolioByUser(user);
+            //Portfolio portfolio = portfolioRepository.findPortfolioByUser(user);
 
             for (MultipartFile file : files) {
                 // 파일이 없으면 스킵
@@ -65,24 +65,24 @@ public class FileUploadController {
             }
 
             // 업로드된 파일의 개수만큼 Presigned URL을 사용하여 포트폴리오에 이미지 URL을 저장
-            switch (preSignedUrls.size()) {
-                case 4:
-                    portfolio.uploadImageUrls(preSignedUrls.get(0), preSignedUrls.get(1), preSignedUrls.get(2), preSignedUrls.get(3));
-                    break;
-                case 3:
-                    portfolio.uploadImageUrls(preSignedUrls.get(0), preSignedUrls.get(1), preSignedUrls.get(2), null);
-                    break;
-                case 2:
-                    portfolio.uploadImageUrls(preSignedUrls.get(0), preSignedUrls.get(1), null, null);
-                    break;
-                case 1:
-                    portfolio.uploadImageUrls(preSignedUrls.get(0), null, null, null);
-                    break;
-                default:
-                    break;
-            }
+//            switch (preSignedUrls.size()) {
+//                case 4:
+//                    portfolio.uploadImageUrls(preSignedUrls.get(0), preSignedUrls.get(1), preSignedUrls.get(2), preSignedUrls.get(3));
+//                    break;
+//                case 3:
+//                    portfolio.uploadImageUrls(preSignedUrls.get(0), preSignedUrls.get(1), preSignedUrls.get(2), null);
+//                    break;
+//                case 2:
+//                    portfolio.uploadImageUrls(preSignedUrls.get(0), preSignedUrls.get(1), null, null);
+//                    break;
+//                case 1:
+//                    portfolio.uploadImageUrls(preSignedUrls.get(0), null, null, null);
+//                    break;
+//                default:
+//                    break;
+//            }
 
-            portfolioRepository.save(portfolio);
+            //portfolioRepository.save(portfolio);
             return ResponseEntity.ok(preSignedUrls);
         } catch (IOException e) {
             e.printStackTrace();
@@ -101,14 +101,13 @@ public class FileUploadController {
             }
 
             User user = jwtTokenProvider.getUserInfoByToken(httpRequest);
-            Portfolio portfolio = portfolioRepository.findPortfolioByUser(user);
 
             if (profileFile != null) {
                 // 프로필 이미지 업로드 처리
-                return handleProfileUpload(httpRequest, profileFile, portfolio);
+                return handleProfileUpload(httpRequest, profileFile);
             } else if (certificateFile != null) {
                 // 인증서 업로드 처리
-                return handleCertificateUpload(httpRequest, certificateFile, portfolio);
+                return handleCertificateUpload(httpRequest, certificateFile);
             } else {
                 return ResponseEntity.badRequest().body("Invalid file type.");
             }
@@ -119,8 +118,7 @@ public class FileUploadController {
     }
 
     private ResponseEntity<String> handleProfileUpload(HttpServletRequest httpRequest,
-                                                       MultipartFile profileFile,
-                                                       Portfolio portfolio) throws IOException {
+                                                       MultipartFile profileFile) throws IOException {
         String fileName = profileFile.getOriginalFilename();
 
         // S3 Presigned URL 및 objectKey 생성
@@ -136,15 +134,14 @@ public class FileUploadController {
         s3service.uploadFileToS3(objectKey, profileFile, metadata);
 
         // 프로필 이미지 URL을 포트폴리오에 저장
-        portfolio.uploadProfileUrl(preSignedUrl);
-        portfolioRepository.save(portfolio);
+//        portfolio.uploadProfileUrl(preSignedUrl);
+//        portfolioRepository.save(portfolio);
 
         return ResponseEntity.ok(preSignedUrl);
     }
 
     private ResponseEntity<String> handleCertificateUpload(HttpServletRequest httpRequest,
-                                                           MultipartFile certificateFile,
-                                                           Portfolio portfolio) throws IOException {
+                                                           MultipartFile certificateFile) throws IOException {
         String fileName = certificateFile.getOriginalFilename();
 
         // S3 Presigned URL 및 objectKey 생성
@@ -160,8 +157,8 @@ public class FileUploadController {
         s3service.uploadFileToS3(objectKey, certificateFile, metadata);
 
         // 인증서 URL을 포트폴리오에 저장
-        portfolio.uploadCertificateUrl(preSignedUrl);
-        portfolioRepository.save(portfolio);
+//        portfolio.uploadCertificateUrl(preSignedUrl);
+//        portfolioRepository.save(portfolio);
 
         return ResponseEntity.ok(preSignedUrl);
     }

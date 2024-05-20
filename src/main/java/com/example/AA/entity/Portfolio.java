@@ -97,7 +97,8 @@ public class Portfolio {
                      String snsAddress, String introduction, int likesCount,
                      String styling1, String cost1, String styling2,
                      String cost2, String styling3, String cost3, String styling4, String cost4,
-                     LocalDateTime createdAt, Integer isAdvertise) {
+                     LocalDateTime createdAt, Integer isAdvertise,String profileURL,
+                     String certificateURL, String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4) {
         this.user = user;
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -115,6 +116,12 @@ public class Portfolio {
         this.cost4 = cost4;
         this.createdAt = LocalDateTime.now();
         this.isAdvertise = isAdvertise;
+        this.profileURL = profileURL;
+        this.certificateURL = certificateURL;
+        this.imageUrl1 = imageUrl1;
+        this.imageUrl2 = imageUrl2;
+        this.imageUrl3 = imageUrl3;
+        this.imageUrl4 = imageUrl4;
     }
     public void uploadImageUrls(String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4) {
         this.imageUrl1 = imageUrl1;

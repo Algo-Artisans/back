@@ -3,6 +3,7 @@ package com.example.AA.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.persistence.Column;
 import java.util.List;
 
 @Getter
@@ -23,6 +24,12 @@ public class PortfolioReqDto {
     private String hairName1;
     private String hairName2;
     private String hairName3;
+    private String profileURL;
+    private String certificateURL;
+    private String imageUrl1;
+    private String imageUrl2;
+    private String imageUrl3;
+    private String imageUrl4;
 
 
     @Builder
@@ -30,7 +37,8 @@ public class PortfolioReqDto {
                            String snsAddress, String introduction,
                            String styling1, String cost1, String styling2, String cost2,
                            String styling3, String cost3, String styling4, String cost4,
-                           String hairName1, String hairName2, String hairName3) {
+                           String hairName1, String hairName2, String hairName3, String profileURL,
+                           String certificateURL, String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4)  {
 
             this.name = name;
             this.phoneNumber = phoneNumber;
@@ -48,6 +56,12 @@ public class PortfolioReqDto {
             this.hairName1 = hairName1;
             this.hairName2 = hairName2;
             this.hairName3 = hairName3;
+            this.profileURL = profileURL;
+            this.certificateURL = certificateURL;
+            this.imageUrl1 = imageUrl1;
+            this.imageUrl2 = imageUrl2;
+            this.imageUrl3 = imageUrl3;
+            this.imageUrl4 = imageUrl4;
         }
 
 }
