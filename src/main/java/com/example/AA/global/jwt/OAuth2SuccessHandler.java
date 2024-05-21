@@ -48,11 +48,24 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // "http://localhost:3000/auth"
         // "https://morak-morak-demo.vercel.app/auth"
+//        String newtargetUrl;
+//        newtargetUrl = UriComponentsBuilder.fromUriString("https://morak-morak-demo.vercel.app/auth")
+//                .queryParam("accessToken", accessToken)
+//                .queryParam("firstLogin", firstLogin)
+//                .build().toUriString();
         String newtargetUrl;
-        newtargetUrl = UriComponentsBuilder.fromUriString("https://morak-morak-demo.vercel.app/auth")
-                .queryParam("accessToken", accessToken)
-                .queryParam("firstLogin", firstLogin)
-                .build().toUriString();
+        String referer = request.getHeader("Referer");
+        if (referer.startsWith("http://localhost:3000/")) {
+            newtargetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/auth")
+                    .queryParam("accessToken", accessToken)
+                    .queryParam("firstLogin", firstLogin)
+                    .build().toUriString();
+        } else {
+            newtargetUrl = UriComponentsBuilder.fromUriString("https://morak-morak-demo.vercel.app/auth")
+                    .queryParam("accessToken", accessToken)
+                    .queryParam("firstLogin", firstLogin)
+                    .build().toUriString();
+        }
         getRedirectStrategy().sendRedirect(request, response, newtargetUrl);
     }
 
